@@ -77,12 +77,6 @@
         
         .content-panel {
             display: none;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .content-panel.active {
@@ -277,28 +271,29 @@
             border: 1px solid #ffeaa7;
         }
         
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .tab-btn {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-        }
+       @media (max-width: 768px) {
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+    }
+
+    .tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+}
     </style>
 </head>
 <body>
+    
     <div class="container">
         <div class="header">
             <h1>🍕 Quản Lý Xưởng Sản Xuất Pizza</h1>
@@ -306,13 +301,14 @@
         </div>
         
         <div class="nav-tabs">
-            <button class="tab-btn" onclick="showTab(event, 'overview')">Sản Xuất</button>
+            <button class="tab-btn active" onclick="showTab(event, 'overview')">Sản Xuất</button>
             <button class="tab-btn" onclick="showTab(event, 'shipment')">Xuất Hàng</button>
             <button class="tab-btn" onclick="showTab(event, 'order')">Đặt Hàng Nguyên Liệu</button>
             <button class="tab-btn" onclick="showTab(event, 'inventory')">Tồn Kho</button>
+            
 
         </div>
-            
+            <div class="content-panel"></div>
             <div class="form-section">
                 <h3>➕ Thêm Sản Phẩm Sản Xuất</h3>
                 <div class="form-row">
@@ -477,6 +473,7 @@
         </tbody>
     </table>
 </div>
+
 
         
         <!-- Tồn kho -->
