@@ -315,7 +315,17 @@
         }
     </style>
 </head>
+
+
 <body>
+    <div id="loginScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+  <h2>🔒 Vui lòng đăng nhập</h2>
+  <input type="text" id="loginID" placeholder="Nhập ID..." style="padding: 10px; margin-top: 10px;">
+  <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." style="padding: 10px; margin-top: 10px;">
+  <button onclick="checkLogin()" style="margin-top: 10px;">Đăng nhập</button>
+  <p id="loginError" style="color: red; margin-top: 10px;"></p>
+</div>
+
     <div class="container">
         <div class="header">
             <h1>🍕 Quản Lý Xưởng Sản Xuất Pizza</h1>
@@ -327,7 +337,6 @@
             <button class="tab-btn" onclick="showTab(event, 'shipment')">Xuất Hàng</button>
             <button class="tab-btn" onclick="showTab(event, 'order')">Đặt Hàng Nguyên Liệu</button>
             <button class="tab-btn" onclick="showTab(event, 'inventory')">Tồn Kho</button>
-            <button class="tab-btn" onclick="showTab(event, 'export')">Xuất Dữ Liệu</button>
         </div>
 
         <!-- Tab Sản Xuất -->
@@ -439,63 +448,69 @@
         <div id="order" class="content-panel">
             <h2>📦 Đặt Hàng Nguyên Liệu Hôm Nay</h2>
 
-            <div class="form-section">
-                <h3>🛒 Đặt Hàng Nguyên Liệu</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tên Hàng:</label>
-                        <select id="ingredient">
-                           <option value="Phô mai cam">Phô mai cam</option>
-                    <option value="Phô mai Topping">Phô mai Topping</option>
-                    <option value="Phô Mai Emborg">Phô Mai Emborg</option>
-                    <option value="Phô mai vàng">Phô mai vàng</option>
-                    <option value="Phô mai tươi">Phô mai tươi</option>
-                    <option value="Gà">Gà</option>
-                    <option value="Đùi Gà">Đùi Gà</option>
-                    <option value="Bắp (Kg)">Bắp (Kg)</option>
-                    <option value="Khoai Tây Chiên">Khoai Tây Chiên</option>
-                    <option value="Xúc Xích heo">Xúc Xích heo</option>
-                    <option value="Xúc Xích Đức">Xúc Xích Đức</option>
-                    <option value="Tôm">Tôm</option>
-                    <option value="Mực">Mực</option>
-                    <option value="Cá Ngừ">Cá Ngừ</option>
-                    <option value="Coca chai">Coca chai</option>
-                    <option value="Nước suối">Nước suối</option>
-                    <option value="Coca lon">Coca lon</option>
-                    <option value="Bia Blance">Bia Blance</option>
-                    <option value="Bia Quy Nhơn">Bia Quy Nhơn</option>
-                    <option value="Bao Pizza Lớn">Bao Pizza Lớn</option>
-                    <option value="Dầu ăn">Dầu ăn</option>
-                    <option value="Thanh Cua">Thanh Cua</option>
-                    <option value="Ba Rọi">Ba Rọi</option>
-                    <option value="Mì Ý">Mì Ý</option>
-                        </select>
-                    </div>
+           <div class="form-section">
+  <h3>🛒 Đặt Hàng Nguyên Liệu</h3>
 
-                    <div class="form-group">
-                        <label>Trạng Thái:</label>
-                        <select id="orderUrgency">
-                            <option value="Gấp">Gấp</option>
-                            <option value="Thong thả">Thong thả</option>
-                        </select>
-                    </div>
-                </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Tên Hàng:</label>
+      <select id="ingredient">
+        <option value="">-- Chọn nguyên liệu --</option>
+        <option value="Phô mai cam">Phô mai cam</option>
+        <option value="Phô mai Topping">Phô mai Topping</option>
+        <option value="Phô Mai Emborg">Phô Mai Emborg</option>
+        <option value="Phô mai vàng">Phô mai vàng</option>
+        <option value="Phô mai tươi">Phô mai tươi</option>
+        <option value="Gà">Gà</option>
+        <option value="Đùi Gà">Đùi Gà</option>
+        <option value="Bắp (Kg)">Bắp (Kg)</option>
+        <option value="Khoai Tây Chiên">Khoai Tây Chiên</option>
+        <option value="Xúc Xích heo">Xúc Xích heo</option>
+        <option value="Xúc Xích Đức">Xúc Xích Đức</option>
+        <option value="Tôm">Tôm</option>
+        <option value="Mực">Mực</option>
+        <option value="Cá Ngừ">Cá Ngừ</option>
+        <option value="Coca chai">Coca chai</option>
+        <option value="Nước suối">Nước suối</option>
+        <option value="Coca lon">Coca lon</option>
+        <option value="Bia Blance">Bia Blance</option>
+        <option value="Bia Quy Nhơn">Bia Quy Nhơn</option>
+        <option value="Bao Pizza Lớn">Bao Pizza Lớn</option>
+        <option value="Dầu ăn">Dầu ăn</option>
+        <option value="Thanh Cua">Thanh Cua</option>
+        <option value="Ba Rọi">Ba Rọi</option>
+        <option value="Mì Ý">Mì Ý</option>
+      </select>
+    </div>
 
-                <button class="btn btn-warning" onclick="addOrder()">Đặt Hàng</button>
-            </div>
+    <div class="form-group">
+      <label>Số Lượng:</label>
+      <input type="number" id="ingredientQty" min="1" value="1" />
+    </div>
 
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Thời Gian</th>
-                        <th>Tên Hàng</th>
-                        <th>Trạng Thái</th>
-                    </tr>
-                </thead>
-                <tbody id="orderTable">
-                </tbody>
-            </table>
-        </div>
+    <div class="form-group">
+      <label>Trạng Thái:</label>
+      <select id="orderUrgency">
+        <option value="Gấp">Gấp</option>
+        <option value="Thong thả">Thong thả</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn btn-secondary" onclick="addOrder()">+ Thêm vào đơn</button>
+  <button class="btn btn-warning" onclick="submitOrder()">📦 Gửi đơn hàng</button>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Tên Hàng</th>
+      <th>Số Lượng</th>
+      <th>Trạng Thái</th>
+    </tr>
+  </thead>
+  <tbody id="orderTable"></tbody>
+</table>
 
         <!-- Tab Tồn Kho -->
         <div id="inventory" class="content-panel">
@@ -536,88 +551,21 @@
                         <th>Trạng Thái</th>
                     </tr>
                 </thead>
-                <tbody id="inventoryTable">
+                <tbody id="inventoryTableBody">
                 </tbody>
             </table>
         </div>
 
-        <!-- Tab Xuất Dữ Liệu -->
-        <div id="export" class="content-panel">
-            <h2>📊 Xuất Dữ Liệu Ra Google Sheets</h2>
-            
-            <div class="sheets-setup">
-                <h3>🔧 Hướng Dẫn Thiết Lập:</h3>
-                <ol>
-                    <li>Tạo một Google Sheet mới tại <a href="https://sheets.google.com" target="_blank">sheets.google.com</a></li>
-                    <li>Chia sẻ sheet với quyền "Editor" cho email: <strong>pizza-manager@example.com</strong></li>
-                    <li>Sao chép Sheet ID từ URL (phần giữa /d/ và /edit)</li>
-                    <li>Dán Sheet ID vào ô bên dưới</li>
-                </ol>
-            </div>
-
-            <div class="google-sheets-section">
-                <h3>🔗 Kết Nối Google Sheets</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Google Sheet ID:</label>
-                        <input type="text" id="sheetId" placeholder="1ABC...XYZ" style="font-family: monospace;">
-                    </div>
-                    <div class="form-group">
-                        <label>Tên Sheet:</label>
-                        <input type="text" id="sheetName" value="DuLieuPizza" placeholder="DuLieuPizza">
-                    </div>
-                </div>
-                
-                <div class="export-controls">
-                    <button class="btn btn-info" onclick="testConnection()">Kiểm Tra Kết Nối</button>
-                    <span class="connection-status disconnected" id="connectionStatus">Chưa kết nối</span>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>📤 Xuất Dữ Liệu</h3>
-                <div class="export-controls">
-                    <button class="btn btn-success" onclick="exportToSheets('production')">Xuất Dữ Liệu Sản Xuất</button>
-                    <button class="btn btn-success" onclick="exportToSheets('shipment')">Xuất Dữ Liệu Xuất Hàng</button>
-                    <button class="btn btn-success" onclick="exportToSheets('order')">Xuất Dữ Liệu Đặt Hàng</button>
-                    <button class="btn btn-success" onclick="exportToSheets('inventory')">Xuất Dữ Liệu Tồn Kho</button>
-                    <button class="btn btn-warning" onclick="exportAllToSheets()">Xuất Tất Cả Dữ Liệu</button>
-                </div>
-                
-                <div class="form-row" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="includeTimestamp" checked> 
-                            Bao gồm thời gian xuất
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="clearBeforeExport"> 
-                            Xóa dữ liệu cũ trước khi xuất
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>📥 Xuất File CSV</h3>
-                <p style="margin-bottom: 15px;">Nếu không thể kết nối với Google Sheets, bạn có thể tải dữ liệu dưới dạng file CSV:</p>
-                <div class="export-controls">
-                    <button class="btn btn-info" onclick="downloadCSV('production')">Tải CSV Sản Xuất</button>
-                    <button class="btn btn-info" onclick="downloadCSV('shipment')">Tải CSV Xuất Hàng</button>
-                    <button class="btn btn-info" onclick="downloadCSV('order')">Tải CSV Đặt Hàng</button>
-                    <button class="btn btn-info" onclick="downloadCSV('inventory')">Tải CSV Tồn Kho</button>
-                </div>
-            </div>
-        </div>
-    </div>
+      
     
     <script>
         // Dữ liệu ứng dụng
-        let productionData = JSON.parse(localStorage.getItem('productionData') || '[]');
-        let shipmentData = JSON.parse(localStorage.getItem('shipmentData') || '[]');
-        let orderData = JSON.parse(localStorage.getItem('orderData') || '[]');
+
+        const USERS = [
+  { id: "admin", password: "123456" },
+  { id: "kho1", password: "kho123" },
+  { id: "kho2", password: "pass456" }
+];
         
         const ingredients = [
             "Đế L", "Đế S", "PML", "PMS", "Bò Pz", "Bò Mì", "Gà", "Tôm", "Mực",
@@ -628,8 +576,8 @@
 
         const inventory = {
     'Bao Bì': {
-    'Giấy ăn': { quantity: 500, unit: 'cuộn', min: 10 },
-    'Ly Nhựa': { quantity: 300, unit: 'lốc', min: 5 },
+    'Giấy ăn': { quantity: 0, unit: 'cuộn', min: 10 },
+    'Ly Nhựa': { quantity: 0, unit: 'lốc', min: 5 },
     'Nĩa Nhựa': { quantity: 300, unit: 'bịch', min: 3 },
     'Hộp đen mì ý': { quantity: 150, unit: 'cái', min: 50 },
     'Hộp mì ý đút lò': { quantity: 100, unit: 'cái', min: 50 },
@@ -740,6 +688,15 @@
   }
 };
 
+ const webhookURL = "https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg";
+
+
+let orderData = [];
+let orderList = [];
+let shipmentData = [];
+let inventoryData = [];
+
+
 
         // Hiển thị ngày hiện tại
         function updateCurrentDate() {
@@ -753,6 +710,8 @@
             document.getElementById('currentDate').textContent = now.toLocaleDateString('vi-VN', options);
         }
         
+
+
         // Chuyển tab
         function showTab(event, tabName) {
             document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
@@ -777,6 +736,17 @@
             }
         }
 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxjKyz3Ektiui9dxUTS4NYXyLTHLr0w7dhlkbDmqGOQ7OeubIBD7QH3MYol5CYYBFqqnA/exec'; // <-- Thay bằng link thật
+
+function sendToSheet(sheetName, data) {
+    const payload = { sheetName, ...data };
+
+    return fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+}
+
         // Khởi tạo danh sách nguyên liệu cho xuất hàng
         function initIngredientList() {
             const container = document.getElementById("ingredientList");
@@ -795,75 +765,225 @@
 
         // Thêm sản xuất
         function addProduction() {
-            const type = document.getElementById("productType").value;
-            const quantity = parseInt(document.getElementById("pizzaQuantity").value);
-            
-            if (!type || quantity <= 0) {
-                alert("Vui lòng chọn loại pizza và nhập số lượng hợp lệ.");
-                return;
-            }
+    const productType = document.getElementById('productType').value;
+    const quantity = parseInt(document.getElementById('pizzaQuantity').value);
+    const now = new Date();
 
-            const now = new Date();
-            const production = {
+    sendToSheet("Lam", {
+        productType,
+        quantity,
+        time: now.toLocaleString('vi-VN')
+    })
+    .then(() => {
+        alert("✔️ Đã thêm sản xuất thành công!");
+        document.getElementById('pizzaQuantity').value = 1;
+    })
+    .catch(error => {
+        console.error('❌ Lỗi:', error);
+        alert("Gửi thất bại, thử lại.");
+    });
+}
+  
+            
+         function addShipment() {
+    const shop = document.getElementById("shopName").value;
+    const inputs = document.querySelectorAll('#ingredientList input');
+    const now = new Date();
+
+    const dataList = [];
+
+     inputs.forEach(input => {
+        const qty = parseInt(input.value);
+        if (qty > 0) {
+            dataList.push({
                 time: now.toLocaleString('vi-VN'),
-                type: type,
-                quantity: quantity,
-                status: 'Đã ghi nhận'
-            };
-
-            productionData.unshift(production);
-            localStorage.setItem('productionData', JSON.stringify(productionData));
-            updateProductionTable();
-            
-            // Reset form
-            document.getElementById("pizzaQuantity").value = 1;
+                shop: shop,
+                ingredient: input.dataset.name,
+                quantity: qty,
+                status: 'Đã giao'
+            });
         }
+    });
+
+    if (dataList.length === 0) {
+        alert("⚠️ Không có nguyên liệu nào để xuất!");
+        return;
+    }
+
+    sendToSheet("Xuat", { data: dataList })
+        .then(() => {
+            alert("✅ Đã tạo đơn xuất hàng cho quán " + shop);
+            inputs.forEach(input => input.value = 0);
+            shipmentData = [...dataList, ...shipmentData];
+            updateShipmentTable();
+        })
+        .catch(error => {
+            console.error('❌ Lỗi:', error);
+            alert("Gửi thất bại, thử lại.");
+        });
+}
+
 
         // Thêm xuất hàng
-        function addShipment() {
-            const shop = document.getElementById("shopName").value;
-            const inputs = document.querySelectorAll('#ingredientList input');
-            const now = new Date();
+      function submitBulkShipment() {
+    const shop = document.getElementById("shopName").value;
+    const inputs = document.querySelectorAll('#ingredientList input');
+    const now = new Date();
+    const shipments = [];
 
-            inputs.forEach(input => {
-                const qty = parseInt(input.value);
-                if (qty > 0) {
-                    const shipment = {
-                        time: now.toLocaleString('vi-VN'),
-                        shop: shop,
-                        ingredient: input.dataset.name,
-                        quantity: qty,
-                        status: 'Đã giao'
-                    };
-                    shipmentData.unshift(shipment);
-                }
+    inputs.forEach(input => {
+        const qty = parseInt(input.value);
+        if (qty > 0) {
+            shipments.push({
+                time: now.toLocaleString('vi-VN'),
+                shop: shop,
+                ingredient: input.dataset.name,
+                quantity: qty,
+                status: 'Đã giao'
             });
 
-            localStorage.setItem('shipmentData', JSON.stringify(shipmentData));
-            updateShipmentTable();
-            
-            // Reset form
-            inputs.forEach(input => input.value = 0);
+            // Clear input sau khi gửi
+            input.value = 0;
+        }
+    });
+
+    if (shipments.length === 0) {
+        alert("⚠️ Bạn chưa nhập số lượng nào.");
+        return;
+    }
+
+    // Gửi tất cả lên Google Sheets trong một lần
+    sendToSheet("Xuat", { data: shipments })
+        .then(() => {
             alert("✅ Đã tạo đơn xuất hàng cho quán " + shop);
-        }
+            shipmentData = shipments.concat(shipmentData); // Cập nhật dữ liệu local nếu có
+            updateShipmentTable();
+        })
+        .catch(error => {
+            console.error("❌ Gửi thất bại:", error);
+            alert("Có lỗi xảy ra khi gửi dữ liệu.");
+        });
+}
 
-        // Thêm đặt hàng
-        function addOrder() {
-            const ingredient = document.getElementById('ingredient').value;
-            const urgency = document.getElementById('orderUrgency').value;
-            const now = new Date();
+ 
+    function addOrder() {
+      const ingredient = document.getElementById("ingredient").value;
+      const urgency = document.getElementById("orderUrgency").value;
 
-            const order = {
-                time: now.toLocaleString('vi-VN'),
-                ingredient: ingredient,
-                urgency: urgency
-            };
+      if (!ingredient) {
+        alert("Vui lòng chọn nguyên liệu");
+        return;
+      }
 
-            orderData.unshift(order);
-            localStorage.setItem('orderData', JSON.stringify(orderData));
-            updateOrderTable();
-        }
+      orderList.push({ ingredient, urgency });
+      updateTable();
+    }
 
+    function updateTable() {
+      const tbody = document.getElementById("orderTable");
+      tbody.innerHTML = "";
+
+      orderList.forEach((order, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.ingredient}</td>
+          <td>${order.urgency}</td>
+          <td><button onclick="removeOrder(${index})">❌</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function removeOrder(index) {
+      orderList.splice(index, 1);
+      updateTable();
+    }
+
+   function submitOrder() {
+  if (orderList.length === 0) {
+    alert("Chưa có món nào trong danh sách đặt hàng.");
+    return;
+  }
+
+  const now = new Date().toLocaleString("vi-VN");
+  let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
+
+  orderList.forEach((item, index) => {
+    message += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
+  });
+
+  fetch(webhookURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content: message })
+  })
+    .then(() => {
+      alert("✅ Đã gửi đơn hàng thành công!");
+      orderList = []; // clear danh sách
+      updateOrderTable(); // cập nhật bảng hiển thị
+    })
+    .catch((error) => {
+      alert("❌ Lỗi khi gửi đơn hàng: " + error.message);
+    });
+}
+
+
+    // Tạo nội dung gửi đi
+    let content = "📦 **Đơn đặt hàng mới:**\n";
+    orderData.forEach((item, index) => {
+        content += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
+    });
+
+    // Gửi tới Apps Script trung gian
+    fetch("https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            message: content
+        })
+    }).then(() => {
+        alert("Đã gửi đơn hàng thành công!");
+        orderData = [];
+        updateOrderTable();
+    }).catch((error) => {
+        alert("Lỗi khi gửi đơn hàng: " + error);
+    });
+
+
+    function submitOrders() {
+      if (orderList.length === 0) {
+        alert("Chưa có món nào để gửi");
+        return;
+      }
+
+      const now = new Date().toLocaleString("vi-VN");
+      let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
+
+      orderList.forEach((o, i) => {
+        message += `\n${i + 1}. ${o.ingredient} (${o.urgency})`;
+      });
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content: message })
+      })
+      .then(() => {
+        alert("✅ Đã gửi đơn hàng thành công!");
+        orderList.length = 0;
+        updateTable();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("❌ Lỗi gửi Discord: " + err.message);
+      });
+    }
         // Cập nhật bảng sản xuất
         function updateProductionTable() {
             const tbody = document.getElementById('productionTable');
@@ -897,20 +1017,7 @@
             });
         }
 
-        // Cập nhật bảng đặt hàng
-        function updateOrderTable() {
-            const tbody = document.getElementById('orderTable');
-            tbody.innerHTML = '';
-            
-            orderData.forEach(item => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${item.time}</td>
-                    <td>${item.ingredient}</td>
-                    <td><span class="status-badge ${item.urgency === 'Gấp' ? 'status-low' : 'status-pending'}">${item.urgency}</span></td>
-                `;
-            });
-        }
+       
 
         // Quản lý tồn kho
         function renderGroupItems() {
@@ -957,244 +1064,130 @@
             input.previousElementSibling.style.color = qty < min ? "red" : "black";
         }
 
+
         function updateGroupInventory() {
-            const group = document.getElementById("groupSelect").value;
-            if (!group || !inventory[group]) {
-                alert("⚠️ Vui lòng chọn nhóm nguyên liệu!");
-                return;
-            }
+    const group = document.getElementById("groupSelect").value;
+    if (!group || !inventory[group]) {
+        alert("⚠️ Vui lòng chọn nhóm nguyên liệu!");
+        return;
+    }
 
-            const ingredients = inventory[group];
-            for (let item in ingredients) {
-                const input = document.getElementById(`input-${group}-${item}`);
-                if (input) {
-                    const newQty = parseInt(input.value);
-                    if (!isNaN(newQty)) {
-                        ingredients[item].quantity = newQty;
-                    }
-                }
-            }
+    const ingredients = inventory[group];
+    const now = new Date();
+    const payloadData = [];
 
-            localStorage.setItem("inventoryData", JSON.stringify(inventory));
-            alert(`✅ Đã cập nhật tồn kho cho nhóm "${group}"!`);
-            renderGroupItems();
-            updateInventoryTable();
-        }
+    for (let item in ingredients) {
+        const input = document.getElementById(`input-${group}-${item}`);
+        if (input) {
+            const newQty = parseInt(input.value);
+            if (!isNaN(newQty)) {
+                ingredients[item].quantity = newQty;
 
-        // Cập nhật bảng tồn kho
-        function updateInventoryTable() {
-            const tbody = document.getElementById('inventoryTable');
-            tbody.innerHTML = '';
-            
-            let hasLowStock = false;
-            
-            Object.keys(inventory).forEach(group => {
-                Object.keys(inventory[group]).forEach(ingredient => {
-                    const item = inventory[group][ingredient];
-                    const row = tbody.insertRow();
-                    const isLow = item.quantity <= item.min;
-                    
-                    if (isLow) hasLowStock = true;
-                    
-                    row.innerHTML = `
-                        <td>${ingredient}</td>
-                        <td>${item.quantity}</td>
-                        <td>${item.unit}</td>
-                        <td>${item.min}</td>
-                        <td><span class="status-badge ${isLow ? 'status-low' : 'status-normal'}">${isLow ? 'Sắp hết' : 'Bình thường'}</span></td>
-                    `;
+                payloadData.push({
+                    group: group,
+                    item: item,
+                    quantity: newQty,
+                    time: now.toLocaleString('vi-VN')
                 });
-            });
-            
-            // Hiển thị cảnh báo nếu có nguyên liệu sắp hết
-            const alert = document.getElementById('lowStockAlert');
-            if (hasLowStock) {
-                alert.style.display = 'block';
-            } else {
-                alert.style.display = 'none';
             }
         }
+    }
 
-        // Google Sheets Integration Functions
-        let isConnected = false;
+    // ✅ Gửi 1 lần tất cả dòng dữ liệu tồn kho
+    sendToSheet("Ton Kho", {
+        data: payloadData
+    }).then(() => {
+        alert(`✅ Đã cập nhật ${payloadData.length} dòng tồn kho cho nhóm "${group}"!`);
+        renderGroupItems();
+        updateInventoryTable();
+    }).catch(err => {
+        console.error("❌ Lỗi gửi tồn kho:", err);
+        alert("Gửi tồn kho thất bại!");
+    });
+}
 
-        function testConnection() {
-            const sheetId = document.getElementById('sheetId').value.trim();
-            const sheetName = document.getElementById('sheetName').value.trim();
-            
-            if (!sheetId) {
-                alert('⚠️ Vui lòng nhập Google Sheet ID!');
-                return;
+           
+    
+            function updateInventoryTable() {
+  const tbody = document.getElementById("inventoryTableBody");
+  tbody.innerHTML = "";
+
+  let hasLowStock = false; // ✅ Khai báo ở đây
+
+  for (let category in inventory) {
+    for (let name in inventory[category]) {
+      const item = inventory[category][name];
+      const isLow = item.quantity < item.min;
+
+      if (isLow) hasLowStock = true;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${category}</td>
+        <td>${name}</td>
+        <td>${item.quantity} ${item.unit}</td>
+        <td>${item.min} ${item.unit}</td>
+        <td style="color: ${isLow ? 'red' : 'green'}">${isLow ? '⚠️ Thiếu' : '✔️ Đủ'}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  }
             }
 
-            // Simulate connection test (in real implementation, this would make an actual API call)
-            const statusEl = document.getElementById('connectionStatus');
-            statusEl.textContent = 'Đang kiểm tra...';
-            statusEl.className = 'connection-status';
-            
-            setTimeout(() => {
-                // Simulate success/failure
-                const success = sheetId.length > 10; // Simple validation
-                
-                if (success) {
-                    isConnected = true;
-                    statusEl.textContent = 'Đã kết nối';
-                    statusEl.className = 'connection-status connected';
-                    alert('✅ Kết nối thành công với Google Sheets!');
-                } else {
-                    isConnected = false;
-                    statusEl.textContent = 'Kết nối thất bại';
-                    statusEl.className = 'connection-status disconnected';
-                    alert('❌ Không thể kết nối. Vui lòng kiểm tra lại Sheet ID!');
-                }
-            }, 2000);
-        }
+function saveProduction(sheet, data) {
+  sheet.appendRow([
+    new Date(),
+    data.productType || "",
+    data.quantity || 0
+  ]);
+}
 
-        function exportToSheets(dataType) {
-            if (!isConnected) {
-                alert('⚠️ Vui lòng kết nối với Google Sheets trước!');
-                return;
-            }
+function saveShipment(sheet, data) {
+  sheet.appendRow([
+    new Date(),
+    data.time || "",
+    data.shop || "",
+    data.ingredient || "",
+    data.quantity || 0,
+    data.status || ""
+  ]);
+}
 
-            const sheetId = document.getElementById('sheetId').value.trim();
-            const sheetName = document.getElementById('sheetName').value.trim();
-            const includeTimestamp = document.getElementById('includeTimestamp').checked;
-            const clearBefore = document.getElementById('clearBeforeExport').checked;
+function saveInventory(sheet, data) {
+  sheet.appendRow([
+    new Date(),
+    data.time || "",
+    data.group || "",
+    data.item || "",
+    data.quantity || 0
+  ]);
+}
 
-            let data = [];
-            let headers = [];
+function updateOrderTable() {
+  const tbody = document.getElementById("orderTable");
+  tbody.innerHTML = "";
 
-            switch(dataType) {
-                case 'production':
-                    headers = ['Thời Gian', 'Loại Pizza', 'Số Lượng', 'Trạng Thái'];
-                    data = productionData.map(item => [item.time, item.type, item.quantity, item.status]);
-                    break;
-                case 'shipment':
-                    headers = ['Thời Gian', 'Quán', 'Nguyên Liệu', 'Số Lượng', 'Trạng Thái'];
-                    data = shipmentData.map(item => [item.time, item.shop, item.ingredient, item.quantity, item.status]);
-                    break;
-                case 'order':
-                    headers = ['Thời Gian', 'Nguyên Liệu', 'Trạng Thái'];
-                    data = orderData.map(item => [item.time, item.ingredient, item.urgency]);
-                    break;
-                case 'inventory':
-                    headers = ['Nhóm', 'Nguyên Liệu', 'Tồn Kho', 'Đơn Vị', 'Mức Tối Thiểu', 'Trạng Thái'];
-                    data = [];
-                    Object.keys(inventory).forEach(group => {
-                        Object.keys(inventory[group]).forEach(ingredient => {
-                            const item = inventory[group][ingredient];
-                            const status = item.quantity <= item.min ? 'Sắp hết' : 'Bình thường';
-                            data.push([group, ingredient, item.quantity, item.unit, item.min, status]);
-                        });
-                    });
-                    break;
-            }
+  orderList.forEach((order, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${order.ingredient}</td>
+      <td>${order.urgency}</td>
+      <td><button onclick="removeOrder(${index})">❌</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
 
-            if (includeTimestamp) {
-                headers.unshift('Thời Gian Xuất');
-                const exportTime = new Date().toLocaleString('vi-VN');
-                data = data.map(row => [exportTime, ...row]);
-            }
+          // Hiển thị cảnh báo nếu có nguyên liệu sắp hết
+            // ✅ Đã sửa đúng biến
+const lowStockAlert = document.getElementById('lowStockAlert');
+if (hasLowStock) {
+    lowStockAlert.style.display = 'block';
+} else {
+    lowStockAlert.style.display = 'none';
+}
 
-            // Simulate API call to Google Sheets
-            simulateGoogleSheetsExport(dataType, headers, data, sheetName);
-        }
-
-        function exportAllToSheets() {
-            if (!isConnected) {
-                alert('⚠️ Vui lòng kết nối với Google Sheets trước!');
-                return;
-            }
-
-            const confirmExport = confirm('🔄 Bạn có chắc chắn muốn xuất tất cả dữ liệu? Quá trình này có thể mất vài phút.');
-            if (!confirmExport) return;
-
-            alert('📤 Bắt đầu xuất tất cả dữ liệu...');
-            
-            setTimeout(() => exportToSheets('production'), 500);
-            setTimeout(() => exportToSheets('shipment'), 1500);
-            setTimeout(() => exportToSheets('order'), 2500);
-            setTimeout(() => exportToSheets('inventory'), 3500);
-            
-            setTimeout(() => {
-                alert('✅ Đã xuất tất cả dữ liệu thành công!');
-            }, 4500);
-        }
-
-        function simulateGoogleSheetsExport(dataType, headers, data, sheetName) {
-            // This simulates the Google Sheets API call
-            // In a real implementation, you would use the Google Sheets API
-            
-            console.log(`Exporting ${dataType} to Google Sheets:`, {
-                sheetName: `${sheetName}_${dataType}`,
-                headers,
-                data
-            });
-
-            setTimeout(() => {
-                alert(`✅ Đã xuất dữ liệu ${getDataTypeName(dataType)} thành công!`);
-            }, 1000);
-        }
-
-        function getDataTypeName(dataType) {
-            const names = {
-                'production': 'Sản Xuất',
-                'shipment': 'Xuất Hàng', 
-                'order': 'Đặt Hàng',
-                'inventory': 'Tồn Kho'
-            };
-            return names[dataType] || dataType;
-        }
-
-        // CSV Export Functions
-        function downloadCSV(dataType) {
-            let csvContent = '';
-            let headers = [];
-            let data = [];
-
-            switch(dataType) {
-                case 'production':
-                    headers = ['Thời Gian', 'Loại Pizza', 'Số Lượng', 'Trạng Thái'];
-                    data = productionData.map(item => [item.time, item.type, item.quantity, item.status]);
-                    break;
-                case 'shipment':
-                    headers = ['Thời Gian', 'Quán', 'Nguyên Liệu', 'Số Lượng', 'Trạng Thái'];
-                    data = shipmentData.map(item => [item.time, item.shop, item.ingredient, item.quantity, item.status]);
-                    break;
-                case 'order':
-                    headers = ['Thời Gian', 'Nguyên Liệu', 'Trạng Thái'];
-                    data = orderData.map(item => [item.time, item.ingredient, item.urgency]);
-                    break;
-                case 'inventory':
-                    headers = ['Nhóm', 'Nguyên Liệu', 'Tồn Kho', 'Đơn Vị', 'Mức Tối Thiểu', 'Trạng Thái'];
-                    data = [];
-                    Object.keys(inventory).forEach(group => {
-                        Object.keys(inventory[group]).forEach(ingredient => {
-                            const item = inventory[group][ingredient];
-                            const status = item.quantity <= item.min ? 'Sắp hết' : 'Bình thường';
-                            data.push([group, ingredient, item.quantity, item.unit, item.min, status]);
-                        });
-                    });
-                    break;
-            }
-
-            // Create CSV content
-            csvContent = headers.join(',') + '\n';
-            data.forEach(row => {
-                csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
-            });
-
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `DuLieu_${getDataTypeName(dataType)}_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        
 
         // Khởi tạo ứng dụng
         document.addEventListener('DOMContentLoaded', function() {
@@ -1205,6 +1198,23 @@
             updateOrderTable();
             updateInventoryTable();
         });
+
+        // Danh sách tài khoản cho phép đăng nhập (có thể thêm nhiều)
+
+function checkLogin() {
+  const inputID = document.getElementById("loginID").value.trim();
+  const inputPass = document.getElementById("loginPassword").value.trim();
+  const errorMsg = document.getElementById("loginError");
+
+  const foundUser = USERS.find(user => user.id === inputID && user.password === inputPass);
+
+  if (foundUser) {
+    document.getElementById("loginScreen").style.display = "none"; // Ẩn màn hình login
+  } else {
+    errorMsg.textContent = "❌ Sai ID hoặc mật khẩu, vui lòng thử lại.";
+  }
+}
+
     </script>
 </body>
 </html>
