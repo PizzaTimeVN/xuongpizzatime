@@ -318,6 +318,7 @@
 
 
 <body>
+    
     <div id="loginScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
   <h2>🔒 Vui lòng đăng nhập</h2>
   <input type="text" id="loginID" placeholder="Nhập ID..." style="padding: 10px; margin-top: 10px;">
@@ -336,7 +337,6 @@
             <button class="tab-btn active" onclick="showTab(event, 'overview')">Sản Xuất</button>
             <button class="tab-btn" onclick="showTab(event, 'shipment')">Xuất Hàng</button>
             <button class="tab-btn" onclick="showTab(event, 'order')">Đặt Hàng Nguyên Liệu</button>
-            <button class="tab-btn" onclick="showTab(event, 'inventory')">Tồn Kho</button>
         </div>
 
         <!-- Tab Sản Xuất -->
@@ -387,6 +387,8 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="addProduction()">Thêm Sản Xuất</button>
+                <button class="btn btn-success" onclick="sendAllProductions()">📤 Gửi Tất Cả</button>
+
             </div>
             
             <table class="data-table">
@@ -484,11 +486,6 @@
     </div>
 
     <div class="form-group">
-      <label>Số Lượng:</label>
-      <input type="number" id="ingredientQty" min="1" value="1" />
-    </div>
-
-    <div class="form-group">
       <label>Trạng Thái:</label>
       <select id="orderUrgency">
         <option value="Gấp">Gấp</option>
@@ -505,65 +502,21 @@
   <thead>
     <tr>
       <th>Tên Hàng</th>
-      <th>Số Lượng</th>
       <th>Trạng Thái</th>
     </tr>
   </thead>
   <tbody id="orderTable"></tbody>
 </table>
 
-        <!-- Tab Tồn Kho -->
-        <div id="inventory" class="content-panel">
-            <h2>📋 Tồn Kho Nguyên Liệu Hiện Tại</h2>
-            
-            <div class="alert alert-warning" id="lowStockAlert" style="display: none;">
-                <strong>⚠️ Cảnh báo:</strong> Một số nguyên liệu sắp hết hàng!
-            </div>
-            
-            <div class="form-section">
-                <h3>📝 Cập Nhật Tồn Kho</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nhóm Nguyên Liệu:</label>
-                        <select id="groupSelect" onchange="renderGroupItems()">
-                            <option value="">-- Chọn nhóm --</option>
-                            <option value="Bao Bì">Bao Bì</option>
-                            <option value="Gia Vị">Gia Vị</option>
-                            <option value="Nước">Nước</option>
-                            <option value="Món ăn nhẹ">Món ăn nhẹ</option>
-                            <option value="Đồ chế biến">Đồ chế biến</option>
-                            <option value="Đồ nguyên bịch">Đồ nguyên bịch</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="ingredientListContainer"></div>
-                <button class="btn btn-primary" onclick="updateGroupInventory()">Cập Nhật</button>
-            </div>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Nguyên Liệu</th>
-                        <th>Tồn Kho</th>
-                        <th>Đơn Vị</th>
-                        <th>Mức Tối Thiểu</th>
-                        <th>Trạng Thái</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryTableBody">
-                </tbody>
-            </table>
-        </div>
-
-      
     
     <script>
+
+    
         // Dữ liệu ứng dụng
 
         const USERS = [
   { id: "admin", password: "123456" },
-  { id: "kho1", password: "kho123" },
+  { id: "NganHoang", password: "ngan2k2" },
   { id: "kho2", password: "pass456" }
 ];
         
@@ -689,6 +642,7 @@
 };
 
  const webhookURL = "https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxEJ7VB6mDWorWZdzC_b6XULlcjQkL5zlJ8NuNAtWNeA4E5ba1Ga1MbnH8leMm0J_-R/exec"; // Thay bằng link của bạn
 
 
 let orderData = [];
@@ -763,27 +717,67 @@ function sendToSheet(sheetName, data) {
             });
         }
 
-        // Thêm sản xuất
-        function addProduction() {
+       let productionList = [];
+
+function addProduction() {
     const productType = document.getElementById('productType').value;
     const quantity = parseInt(document.getElementById('pizzaQuantity').value);
     const now = new Date();
+    const time = now.toLocaleString('vi-VN');
 
-    sendToSheet("Lam", {
+    if (!productType || isNaN(quantity) || quantity <= 0) {
+        alert("Vui lòng nhập đúng loại sản phẩm và số lượng.");
+        return;
+    }
+
+    productionList.push({
         productType,
         quantity,
-        time: now.toLocaleString('vi-VN')
-    })
-    .then(() => {
-        alert("✔️ Đã thêm sản xuất thành công!");
-        document.getElementById('pizzaQuantity').value = 1;
-    })
-    .catch(error => {
-        console.error('❌ Lỗi:', error);
-        alert("Gửi thất bại, thử lại.");
+        time
+    });
+
+    renderProductionTable();
+    document.getElementById('pizzaQuantity').value = 1;
+}
+
+function renderProductionTable() {
+    const tbody = document.getElementById('productionTable');
+    tbody.innerHTML = "";
+
+    productionList.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.time}</td>
+            <td>${item.productType}</td>
+            <td>${item.quantity}</td>
+            <td>⏳ Chờ gửi</td>
+        `;
+        tbody.appendChild(row);
     });
 }
-  
+
+function sendAllProductions() {
+    if (productionList.length === 0) {
+        alert("Không có dữ liệu để gửi.");
+        return;
+    }
+
+    const promises = productionList.map(item => {
+        return sendToSheet("Lam", item);
+    });
+
+    Promise.all(promises)
+        .then(() => {
+            alert("✔️ Đã gửi toàn bộ danh sách sản xuất.");
+            productionList = [];
+            renderProductionTable();
+        })
+        .catch(err => {
+            console.error("❌ Lỗi khi gửi:", err);
+            alert("Có lỗi khi gửi. Hãy thử lại.");
+        });
+}
+
             
          function addShipment() {
     const shop = document.getElementById("shopName").value;
@@ -1019,120 +1013,9 @@ function sendToSheet(sheetName, data) {
 
        
 
-        // Quản lý tồn kho
-        function renderGroupItems() {
-            const group = document.getElementById("groupSelect").value;
-            const container = document.getElementById("ingredientListContainer");
-            container.innerHTML = "";
+      
 
-            if (!group || !inventory[group]) return;
-
-            const ingredients = inventory[group];
-            const form = document.createElement("div");
-
-            for (let item in ingredients) {
-                const ing = ingredients[item];
-                const color = ing.quantity < ing.min ? 'style="color:red;"' : "";
-
-                const row = document.createElement("div");
-                row.classList.add("form-row");
-
-                row.innerHTML = `
-                    <div class="form-group">
-                        <label ${color}><strong>${item}</strong> (${ing.unit}) — Tối thiểu: ${ing.min}</label>
-                        <input 
-                            type="number" 
-                            id="input-${group}-${item}" 
-                            value="${ing.quantity}" 
-                            min="0" 
-                            onchange="checkBelowMin('${group}', '${item}')"
-                        >
-                    </div>
-                `;
-
-                form.appendChild(row);
-            }
-
-            container.appendChild(form);
-        }
-
-        function checkBelowMin(group, item) {
-            const input = document.getElementById(`input-${group}-${item}`);
-            const qty = parseInt(input.value);
-            const min = inventory[group][item].min;
-
-            input.previousElementSibling.style.color = qty < min ? "red" : "black";
-        }
-
-
-        function updateGroupInventory() {
-    const group = document.getElementById("groupSelect").value;
-    if (!group || !inventory[group]) {
-        alert("⚠️ Vui lòng chọn nhóm nguyên liệu!");
-        return;
-    }
-
-    const ingredients = inventory[group];
-    const now = new Date();
-    const payloadData = [];
-
-    for (let item in ingredients) {
-        const input = document.getElementById(`input-${group}-${item}`);
-        if (input) {
-            const newQty = parseInt(input.value);
-            if (!isNaN(newQty)) {
-                ingredients[item].quantity = newQty;
-
-                payloadData.push({
-                    group: group,
-                    item: item,
-                    quantity: newQty,
-                    time: now.toLocaleString('vi-VN')
-                });
-            }
-        }
-    }
-
-    // ✅ Gửi 1 lần tất cả dòng dữ liệu tồn kho
-    sendToSheet("Ton Kho", {
-        data: payloadData
-    }).then(() => {
-        alert(`✅ Đã cập nhật ${payloadData.length} dòng tồn kho cho nhóm "${group}"!`);
-        renderGroupItems();
-        updateInventoryTable();
-    }).catch(err => {
-        console.error("❌ Lỗi gửi tồn kho:", err);
-        alert("Gửi tồn kho thất bại!");
-    });
-}
-
-           
-    
-            function updateInventoryTable() {
-  const tbody = document.getElementById("inventoryTableBody");
-  tbody.innerHTML = "";
-
-  let hasLowStock = false; // ✅ Khai báo ở đây
-
-  for (let category in inventory) {
-    for (let name in inventory[category]) {
-      const item = inventory[category][name];
-      const isLow = item.quantity < item.min;
-
-      if (isLow) hasLowStock = true;
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${category}</td>
-        <td>${name}</td>
-        <td>${item.quantity} ${item.unit}</td>
-        <td>${item.min} ${item.unit}</td>
-        <td style="color: ${isLow ? 'red' : 'green'}">${isLow ? '⚠️ Thiếu' : '✔️ Đủ'}</td>
-      `;
-      tbody.appendChild(row);
-    }
-  }
-            }
+      
 
 function saveProduction(sheet, data) {
   sheet.appendRow([
@@ -1178,15 +1061,7 @@ function updateOrderTable() {
   });
 }
 
-          // Hiển thị cảnh báo nếu có nguyên liệu sắp hết
-            // ✅ Đã sửa đúng biến
-const lowStockAlert = document.getElementById('lowStockAlert');
-if (hasLowStock) {
-    lowStockAlert.style.display = 'block';
-} else {
-    lowStockAlert.style.display = 'none';
-}
-
+    
         
 
         // Khởi tạo ứng dụng
