@@ -12,10 +12,10 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
             color: #333;
+            line-height: 1.6;
         }
         
         .container {
@@ -27,59 +27,65 @@
         .header {
             background: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             text-align: center;
+            border-left: 4px solid #28a745;
         }
         
         .header h1 {
-            color: #d63384;
+            color: #333;
             margin-bottom: 10px;
-            font-size: 2.5em;
+            font-size: 2em;
         }
         
         .date-display {
             color: #666;
-            font-size: 1.1em;
+            font-size: 1em;
         }
         
         .nav-tabs {
             display: flex;
             background: white;
-            border-radius: 15px;
-            padding: 10px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         
         .tab-btn {
             flex: 1;
             padding: 15px 20px;
             border: none;
-            background: transparent;
-            border-radius: 10px;
+            background: white;
             cursor: pointer;
             font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 500;
             color: #666;
+            border-right: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:last-child {
+            border-right: none;
         }
         
         .tab-btn.active {
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            background: #28a745;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #f8f9fa;
         }
         
         .content-panel {
             display: none;
             background: white;
-            border-radius: 15px;
+            border-radius: 8px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
         
@@ -89,10 +95,15 @@
         
         .form-section {
             background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 8px;
             margin-bottom: 30px;
-            border-left: 5px solid #ff6b6b;
+            border-left: 4px solid #28a745;
+        }
+        
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
         }
         
         .form-row {
@@ -109,17 +120,17 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
+            margin-bottom: 5px;
+            font-weight: 500;
             color: #333;
         }
         
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #e9ecef;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 1em;
             transition: border-color 0.3s ease;
         }
@@ -127,15 +138,15 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #ff6b6b;
+            border-color: #28a745;
         }
         
         .btn {
-            padding: 12px 30px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 1em;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-right: 10px;
@@ -143,28 +154,39 @@
         }
         
         .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: #333;
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #555;
         }
         
         .btn-success {
-            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            background: #28a745;
             color: white;
         }
         
-        .btn-warning {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
             color: white;
         }
         
-        .btn-info {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
             color: white;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .btn-secondary:hover {
+            background: #5a6268;
         }
         
         .data-table {
@@ -172,16 +194,17 @@
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .data-table th {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: #333;
             color: white;
             padding: 15px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 500;
         }
         
         .data-table td {
@@ -200,7 +223,8 @@
             margin-bottom: 10px;
             padding: 10px;
             background: white;
-            border-radius: 8px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
         }
         
         .ingredient-row label {
@@ -211,88 +235,121 @@
         .ingredient-row input {
             width: 100px;
             padding: 8px;
-            border: 2px solid #e9ecef;
-            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-urgent {
+            background: #f8d7da;
+            color: #721c24;
         }
         
         .alert {
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-bottom: 20px;
+            border-left: 4px solid;
         }
         
         .alert-warning {
             background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
+            border-color: #ffc107;
             color: #856404;
         }
         
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
         }
         
-        .status-completed {
-            background: #d1f2eb;
-            color: #0c7b5c;
-        }
-        
-        .status-pending {
-            background: #fef9e7;
-            color: #b7791f;
-        }
-        
-        .status-low {
-            background: #f8d7da;
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #dc3545;
             color: #721c24;
         }
         
-        .status-normal {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .google-sheets-section {
-            background: #e8f5e8;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid #28a745;
-        }
-
-        .sheets-setup {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .export-controls {
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
             align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
-
-        .connection-status {
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-left: 10px;
+        
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            max-width: 400px;
+            width: 100%;
         }
-
-        .connected {
-            background: #d4edda;
-            color: #155724;
+        
+        .login-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
         }
-
-        .disconnected {
-            background: #f8d7da;
-            color: #721c24;
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+        
+        .login-form button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .login-form button:hover {
+            background: #218838;
+        }
+        
+        .login-error {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 10px;
         }
         
         @media (max-width: 768px) {
@@ -304,39 +361,56 @@
                 flex-direction: column;
             }
             
+            .tab-btn {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .tab-btn:last-child {
+                border-bottom: none;
+            }
+            
             .data-table {
                 font-size: 0.9em;
             }
             
-            .export-controls {
+            .ingredient-row {
                 flex-direction: column;
                 align-items: stretch;
+            }
+            
+            .ingredient-row label {
+                min-width: auto;
+            }
+            
+            .ingredient-row input {
+                width: 100%;
             }
         }
     </style>
 </head>
 
-
 <body>
-    
-    <div id="loginScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-  <h2>🔒 Vui lòng đăng nhập</h2>
-  <input type="text" id="loginID" placeholder="Nhập ID..." style="padding: 10px; margin-top: 10px;">
-  <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." style="padding: 10px; margin-top: 10px;">
-  <button onclick="checkLogin()" style="margin-top: 10px;">Đăng nhập</button>
-  <p id="loginError" style="color: red; margin-top: 10px;"></p>
-</div>
+    <div id="loginScreen">
+        <div class="login-form">
+            <h2>🔒 Đăng Nhập Hệ Thống</h2>
+            <input type="text" id="loginID" placeholder="Nhập ID...">
+            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu...">
+            <button onclick="checkLogin()">Đăng Nhập</button>
+            <div id="loginError" class="login-error"></div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="header">
-            <h1>🍕 Quản Lý Xưởng Sản Xuất Pizza</h1>
+            <h1>🍕 Quản Lý Xưởng Pizza</h1>
             <div class="date-display" id="currentDate"></div>
         </div>
         
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab(event, 'overview')">Sản Xuất</button>
             <button class="tab-btn" onclick="showTab(event, 'shipment')">Xuất Hàng</button>
-            <button class="tab-btn" onclick="showTab(event, 'order')">Đặt Hàng Nguyên Liệu</button>
+            <button class="tab-btn" onclick="showTab(event, 'order')">Đặt Hàng</button>
         </div>
 
         <!-- Tab Sản Xuất -->
@@ -344,58 +418,56 @@
             <h2>🏭 Quản Lý Sản Xuất</h2>
             
             <div class="form-section">
-                <h3>➕ Thêm Sản Phẩm Sản Xuất</h3>
+                <h3>➕ Thêm Sản Phẩm</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Loại:</label>
+                        <label>Loại sản phẩm:</label>
                         <select id="productType">
-                            <option value="Đế L">Đế L</option>
-  <option value="Đế S">Đế S</option>
-  <option value="Phô Mai L">Phô Mai L</option>
-  <option value="Phô Mai S">Phô Mai S</option>
-  <option value="Bò pz">Bò pz</option>
-  <option value="Bò mì Ý">Bò mì Ý</option>
-  <option value="Gà">Gà</option>
-  <option value="Tôm">Tôm</option>
-  <option value="Mực">Mực</option>
-  <option value="Cá Ngừ (bịch)">Cá Ngừ (bịch)</option>
-  <option value="XXH (bịch)">XXH (bịch)</option>
-  <option value="XXĐ (bịch)">XXĐ (bịch)</option>
-  <option value="Ba Rọi (bịch)">Ba Rọi (bịch)</option>
-  <option value="Phô mai tươi">Phô mai tươi</option>
-  <option value="Bò sốt cay (bịch)">Bò sốt cay (bịch)</option>
-  <option value="Sốt sữa (bịch)">Sốt sữa (bịch)</option>
-  <option value="Sốt cà (hũ)">Sốt cà (hũ)</option>
-  <option value="Sốt Gà">Sốt Gà</option>
-  <option value="Salami (bịch)">Salami (bịch)</option>
-  <option value="Đùi Gà">Đùi Gà</option>
-  <option value="Đá Me">Đá Me</option>
-  <option value="Gà Lắc">Gà Lắc</option>
-  <option value="XX Chiên Xù">XX Chiên Xù</option>
-  <option value="Trà đào( mứt)">Trà đào( mứt)</option>
-  <option value="KTC">KTC</option>
-  <option value="Tok">Tok</option>
-  <option value="Trà đào miếng">Trà đào miếng</option>
-  <option value="Nấm">Nấm</option>
-  <option value="Bông Cải Xanh">Bông Cải Xanh</option>
-  <option value="Bom Phô Mai">Bom Phô Mai</option>
+                            <option value="Đế S">Đế S</option>
+                            <option value="Phô Mai L">Phô Mai L</option>
+                            <option value="Phô Mai S">Phô Mai S</option>
+                            <option value="Bò pz">Bò pz</option>
+                            <option value="Bò mì Ý">Bò mì Ý</option>
+                            <option value="Gà">Gà</option>
+                            <option value="Tôm">Tôm</option>
+                            <option value="Mực">Mực</option>
+                            <option value="Cá Ngừ (bịch)">Cá Ngừ (bịch)</option>
+                            <option value="XXH (bịch)">XXH (bịch)</option>
+                            <option value="XXĐ (bịch)">XXĐ (bịch)</option>
+                            <option value="Ba Rọi (bịch)">Ba Rọi (bịch)</option>
+                            <option value="Phô mai tươi">Phô mai tươi</option>
+                            <option value="Bò sốt cay (bịch)">Bò sốt cay (bịch)</option>
+                            <option value="Sốt sữa (bịch)">Sốt sữa (bịch)</option>
+                            <option value="Sốt cà (hũ)">Sốt cà (hũ)</option>
+                            <option value="Sốt Gà">Sốt Gà</option>
+                            <option value="Salami (bịch)">Salami (bịch)</option>
+                            <option value="Đùi Gà">Đùi Gà</option>
+                            <option value="Đá Me">Đá Me</option>
+                            <option value="Gà Lắc">Gà Lắc</option>
+                            <option value="XX Chiên Xù">XX Chiên Xù</option>
+                            <option value="Trà đào( mứt)">Trà đào( mứt)</option>
+                            <option value="KTC">KTC</option>
+                            <option value="Tok">Tok</option>
+                            <option value="Trà đào miếng">Trà đào miếng</option>
+                            <option value="Nấm">Nấm</option>
+                            <option value="Bông Cải Xanh">Bông Cải Xanh</option>
+                            <option value="Bom Phô Mai">Bom Phô Mai</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Số Lượng:</label>
+                        <label>Số lượng:</label>
                         <input type="number" id="pizzaQuantity" min="1" value="1">
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="addProduction()">Thêm Sản Xuất</button>
+                <button class="btn btn-primary" onclick="addProduction()">Thêm</button>
                 <button class="btn btn-success" onclick="sendAllProductions()">📤 Gửi Tất Cả</button>
-
             </div>
             
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>Thời Gian</th>
-                        <th>Loại Pizza</th>
+                        <th>Loại</th>
                         <th>Số Lượng</th>
                         <th>Trạng Thái</th>
                     </tr>
@@ -407,13 +479,13 @@
         
         <!-- Tab Xuất Hàng -->
         <div id="shipment" class="content-panel">
-            <h2>🚚 Xuất Hàng Cho Quán</h2>
+            <h2>🚚 Xuất Hàng</h2>
             
             <div class="form-section">
-                <h3>📤 Tạo Đơn Xuất Hàng</h3>
+                <h3>📤 Tạo Đơn Xuất</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Quán:</label>
+                        <label>Chọn quán:</label>
                         <select id="shopName">
                             <option value="DH">DH</option>
                             <option value="NH">NH</option>
@@ -424,11 +496,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Nguyên Liệu & Số Lượng:</label>
+                    <label>Nguyên liệu:</label>
                     <div id="ingredientList"></div>
                 </div>
 
-                <button class="btn btn-success" onclick="addShipment()">Tạo Đơn Xuất</button>
+                <button class="btn btn-success" onclick="addShipment()">Tạo Đơn</button>
             </div>
 
             <table class="data-table">
@@ -448,211 +520,86 @@
 
         <!-- Tab Đặt Hàng -->
         <div id="order" class="content-panel">
-            <h2>📦 Đặt Hàng Nguyên Liệu Hôm Nay</h2>
+            <h2>📦 Đặt Hàng Nguyên Liệu</h2>
 
-           <div class="form-section">
-  <h3>🛒 Đặt Hàng Nguyên Liệu</h3>
+            <div class="form-section">
+                <h3>🛒 Thêm Nguyên Liệu</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tên hàng:</label>
+                        <select id="ingredient">
+                            <option value="Phô mai cam">Phô mai cam</option>
+                            <option value="Phô mai Topping">Phô mai Topping</option>
+                            <option value="Phô Mai Emborg">Phô Mai Emborg</option>
+                            <option value="Phô mai vàng">Phô mai vàng</option>
+                            <option value="Phô mai tươi">Phô mai tươi</option>
+                            <option value="Gà">Gà</option>
+                            <option value="Đùi Gà">Đùi Gà</option>
+                            <option value="Bắp (Kg)">Bắp (Kg)</option>
+                            <option value="Khoai Tây Chiên">Khoai Tây Chiên</option>
+                            <option value="Xúc Xích heo">Xúc Xích heo</option>
+                            <option value="Xúc Xích Đức">Xúc Xích Đức</option>
+                            <option value="Tôm">Tôm</option>
+                            <option value="Mực">Mực</option>
+                            <option value="Cá Ngừ">Cá Ngừ</option>
+                            <option value="Coca chai">Coca chai</option>
+                            <option value="Nước suối">Nước suối</option>
+                            <option value="Coca lon">Coca lon</option>
+                            <option value="Bia Blance">Bia Blance</option>
+                            <option value="Bia Quy Nhơn">Bia Quy Nhơn</option>
+                            <option value="Bao Pizza Lớn">Bao Pizza Lớn</option>
+                            <option value="Dầu ăn">Dầu ăn</option>
+                            <option value="Thanh Cua">Thanh Cua</option>
+                            <option value="Ba Rọi">Ba Rọi</option>
+                            <option value="Mì Ý">Mì Ý</option>  
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Độ ưu tiên:</label>
+                        <select id="orderUrgency">
+                            <option value="Gấp">Gấp</option>
+                            <option value="Bình thường">Bình thường</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="addOrder()">+ Thêm</button>
+                <button class="btn btn-success" onclick="submitOrder()">📦 Gửi Đơn</button>
+            </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label>Tên Hàng:</label>
-      <select id="ingredient">
-        <option value="">-- Chọn nguyên liệu --</option>
-        <option value="Phô mai cam">Phô mai cam</option>
-        <option value="Phô mai Topping">Phô mai Topping</option>
-        <option value="Phô Mai Emborg">Phô Mai Emborg</option>
-        <option value="Phô mai vàng">Phô mai vàng</option>
-        <option value="Phô mai tươi">Phô mai tươi</option>
-        <option value="Gà">Gà</option>
-        <option value="Đùi Gà">Đùi Gà</option>
-        <option value="Bắp (Kg)">Bắp (Kg)</option>
-        <option value="Khoai Tây Chiên">Khoai Tây Chiên</option>
-        <option value="Xúc Xích heo">Xúc Xích heo</option>
-        <option value="Xúc Xích Đức">Xúc Xích Đức</option>
-        <option value="Tôm">Tôm</option>
-        <option value="Mực">Mực</option>
-        <option value="Cá Ngừ">Cá Ngừ</option>
-        <option value="Coca chai">Coca chai</option>
-        <option value="Nước suối">Nước suối</option>
-        <option value="Coca lon">Coca lon</option>
-        <option value="Bia Blance">Bia Blance</option>
-        <option value="Bia Quy Nhơn">Bia Quy Nhơn</option>
-        <option value="Bao Pizza Lớn">Bao Pizza Lớn</option>
-        <option value="Dầu ăn">Dầu ăn</option>
-        <option value="Thanh Cua">Thanh Cua</option>
-        <option value="Ba Rọi">Ba Rọi</option>
-        <option value="Mì Ý">Mì Ý</option>
-      </select>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên Hàng</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTable"></tbody>
+            </table>
+        </div>
     </div>
-
-    <div class="form-group">
-      <label>Trạng Thái:</label>
-      <select id="orderUrgency">
-        <option value="Gấp">Gấp</option>
-        <option value="Thong thả">Thong thả</option>
-      </select>
-    </div>
-  </div>
-
-  <button class="btn btn-secondary" onclick="addOrder()">+ Thêm vào đơn</button>
-  <button class="btn btn-warning" onclick="submitOrder()">📦 Gửi đơn hàng</button>
-</div>
-
-<table class="data-table">
-  <thead>
-    <tr>
-      <th>Tên Hàng</th>
-      <th>Trạng Thái</th>
-    </tr>
-  </thead>
-  <tbody id="orderTable"></tbody>
-</table>
-
     
     <script>
-
-    
-        // Dữ liệu ứng dụng
-
         const USERS = [
-  { id: "admin", password: "123456" },
-  { id: "NganHoang", password: "ngan2k2" },
-  { id: "kho2", password: "pass456" }
-];
+            { id: "admin", password: "123456" },
+            { id: "NganHoang", password: "ngan2k2" },
+            { id: "kho2", password: "pass456" }
+        ];
         
         const ingredients = [
             "Đế L", "Đế S", "PML", "PMS", "Bò Pz", "Bò Mì", "Gà", "Tôm", "Mực",
             "XXH", "XXĐ", "Cá Ngừ", "Ba Rọi", "Bò Sốt Cay", "Thanh Cua", "SLM",
-            "Phô Mai Tươi", "Bông Cải Xanh", "Nấm", "Coca CHai", "Coca Lon",
+            "Phô Mai Tươi", "Bông Cải Xanh", "Nấm", "Coca Chai", "Coca Lon",
             "Nước Suối", "Gà Lắc", "Gà Rán", "XX Chiên xù", "Dầu ăn"
         ];
 
-        const inventory = {
-    'Bao Bì': {
-    'Giấy ăn': { quantity: 0, unit: 'cuộn', min: 10 },
-    'Ly Nhựa': { quantity: 0, unit: 'lốc', min: 5 },
-    'Nĩa Nhựa': { quantity: 300, unit: 'bịch', min: 3 },
-    'Hộp đen mì ý': { quantity: 150, unit: 'cái', min: 50 },
-    'Hộp mì ý đút lò': { quantity: 100, unit: 'cái', min: 50 },
-    'Bao cân bò': { quantity: 100, unit: 'kg', min: 0.2 },
-    'Bao cân mì ý': { quantity: 100, unit: 'kg', min: 0.2 },
-    'Bao Ly nhựa': { quantity: 200, unit: 'kg', min: 1 },
-    'Bao pizza': { quantity: 300, unit: 'kg', min: 1 },
-    'Bao 1 món': { quantity: 300, unit: 'kg', min: 1 },
-    'Bao rác': { quantity: 100, unit: 'kg', min: 1 },
-    'Bao Tay cao su': { quantity: 50, unit: 'hộp', min: 2 },
-    'Bì vàng': { quantity: 100, unit: 'kg', min: 0.5 },
-    'Giấy nên lót hộp': { quantity: 200, unit: 'tờ', min: 100 },
-    'Bao giấy trắng': { quantity: 200, unit: 'tờ', min: 100 },
-    'Bao đế nhỏ': { quantity: 200, unit: 'kg', min: 0.5 },
-    'Bao đế lớn': { quantity: 200, unit: 'kg', min: 0.5 },
-    'Cuộn in Bill': { quantity: 30, unit: 'cuộn', min: 5 },
-    'vòng Pizza time': { quantity: 200, unit: 'cái', min: 100 },
-    'Ống Hút': { quantity: 300, unit: 'cái', min: 100 }
-  },
-  'Gia Vị': {
-    'Trứng': { quantity: 100, unit: 'quả', min: 5 },
-    'Đường': { quantity: 10, unit: 'kg', min: 2 },
-    'Muối': { quantity: 5, unit: 'kg', min: 2 },
-    'Rượu': { quantity: 3, unit: 'chai', min: 1 },
-    'Xì dầu': { quantity: 5, unit: 'chai', min: 2 },
-    'Sốt Dầu Giấm': { quantity: 2, unit: 'chai', min: 1 },
-    'Tiêu': { quantity: 1, unit: 'kg', min: 0.5 },
-    'Men': { quantity: 0.5, unit: 'kg', min: 0.2 },
-    'Bột Gà': { quantity: 2, unit: 'kg', min: 1 },
-    'Nước rửa chén': { quantity: 3, unit: 'can', min: 1 },
-    'Sốt Gà Cay': { quantity: 2, unit: 'can', min: 0.3 },
-    'Sốt Ướp Thịt': { quantity: 3, unit: 'bịch', min: 1 },
-    'Mayonaise Xanh': { quantity: 4, unit: 'chai', min: 2 },
-    'Dầu Ăn': { quantity: 10, unit: 'can', min: 0.5 },
-    'Bơ': { quantity: 5, unit: 'hũ', min: 2 },
-    'cà chua paste sệt': { quantity: 4, unit: 'hũ', min: 2 },
-    'PM lắc gà': { quantity: 2, unit: 'bịch', min: 1 }
-  },
-  'Nước': {
-    'Đá me': { quantity: 5, unit: 'lít', min: 2 },
-    'Coca chai': { quantity: 50, unit: 'chai', min: 6 },
-    'Nước suối': { quantity: 100, unit: 'chai', min: 10 },
-    'CoCa lon': { quantity: 60, unit: 'lon', min: 10 },
-    '7 up': { quantity: 40, unit: 'chai', min: 20 },
-    'Bia Blance': { quantity: 30, unit: 'chai', min: 10 },
-    'Bia Quy Nhơn': { quantity: 30, unit: 'chai', min: 10 },
-    'Trà sữa': { quantity: 10, unit: 'lít', min: 5 },
-    'Trân châu': { quantity: 2, unit: 'kg', min: 1 },
-    'Trà đào': { quantity: 5, unit: 'hộp', min: 1 },
-    'Miếng Đào': { quantity: 2, unit: 'bịch', min: 10 },
-    'Mứt Đào': { quantity: 1, unit: 'chai', min: 0.5 },
-    'Nước Đường': { quantity: 5, unit: 'lít', min: 2 }
-  },
-  'Món ăn nhẹ': {
-    'Bánh mì': { quantity: 30, unit: 'ổ', min: 15 },
-    'Bò Mì Ý': { quantity: 10, unit: 'bịch', min: 20 },
-    'Gà Lắc': { quantity: 10, unit: 'bịch', min: 20 },
-    'Gà Rán': { quantity: 10, unit: 'đùi', min: 10 },
-    'KTC': { quantity: 5, unit: 'bịch', min: 20 },
-    'Bom Phô Mai': { quantity: 3, unit: 'bom', min: 10 },
-    'XX Chiên xù': { quantity: 5, unit: 'cây', min: 10 },
-    'Sốt sữa': { quantity: 2, unit: 'bịch', min: 10 },
-    'Tokbokki (Bịch)': { quantity: 5, unit: 'bịch', min: 10 }
-  },
-  'Đồ chế biến': {
-    'Ba Rọi (bịch)': { quantity: 10, unit: 'bịch', min: 20 },
-    'Bò Pizza': { quantity: 8, unit: 'bịch', min: 20 },
-    'Bò Sốt Cay (bịch)': { quantity: 6, unit: 'bịch', min: 10 },
-    'Cá ngừ (bịch)': { quantity: 6, unit: 'bịch', min: 20 },
-    'Đế L': { quantity: 40, unit: 'cái', min: 20 },
-    'Đế S': { quantity: 60, unit: 'cái', min: 30 },
-    'Gà Pizza': { quantity: 8, unit: 'bịch', min: 20 },
-    'Mực': { quantity: 5, unit: 'g', min: 100 },
-    'Phô Mai L (bịch)': { quantity: 10, unit: 'bịch', min: 50 },
-    'Phô Mai S (bịch)': { quantity: 12, unit: 'bịch', min: 30 },
-    'Sốt cà': { quantity: 20, unit: 'hũ', min: 2 },
-    'Tôm': { quantity: 4, unit: 'g', min: 200 },
-    'XXĐ (bịch)': { quantity: 6, unit: 'bịch', min: 20 },
-    'XXH (bịch)': { quantity: 6, unit: 'bịch', min: 20 },
-    'Khô Gà (bịch)': { quantity: 3, unit: 'bịch', min: 10 },
-    'Lạp Xưởng (bịch)': { quantity: 5, unit: 'bịch', min: 10 },
-    'Nấm (bịch)': { quantity: 4, unit: 'bịch', min: 10 },
-    'Bông cải Xanh (Bịch)': { quantity: 4, unit: 'bịch', min: 10 }
-  },
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxjKyz3Ektiui9dxUTS4NYXyLTHLr0w7dhlkbDmqGOQ7OeubIBD7QH3MYol5CYYBFqqnA/exec';
+        const webhookURL = "https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg";
 
-  'Đồ nguyên bịch': {
-    'Ba Rọi (nguyên)': { quantity: 3, unit: 'kg', min: 1 },
-    'Bắp (nguyên)': { quantity: 3, unit: 'kg', min: 6 },
-    'Cá ngừ': { quantity: 2, unit: 'hũ', min: 1 },
-    'Gà (nguyên)': { quantity: 4, unit: 'kg', min: 2 },
-    'Khoai Tây Chiên': { quantity: 5, unit: 'kg', min: 2.5 },
-    'Mayonaise': { quantity: 3, unit: 'hũ', min: 1 },
-    'Mì ý ch luộc': { quantity: 5, unit: 'bịch', min: 10 },
-    'Phô Mai Cam': { quantity: 3, unit: 'cây', min: 3 },
-    'Phô Mai Topping': { quantity: 3, unit: 'cây', min: 5 },
-    'Phô Mai Emborg': { quantity: 2, unit: 'cây', min: 5 },
-    'Phô Mai Tươi': { quantity: 2, unit: 'viên', min: 50 },
-    'Phô Mai Vàng': { quantity: 3, unit: 'cây', min: 20 },
-    'Thanh Cua': { quantity: 2, unit: 'hộp', min: 2 },
-    'Salami': { quantity: 2, unit: 'bịch', min: 1 },
-    'XXĐ (nguyên)': { quantity: 3, unit: 'kg', min: 1 },
-    'XXH (nguyên)': { quantity: 3, unit: 'kg', min: 1 },
-    'Tương': { quantity: 2, unit: 'lít', min: 1 },
-    'Tương ớt chai (thùng)': { quantity: 1, unit: 'thùng', min: 1 },
-    'Tương cà chai (thùng)': { quantity: 1, unit: 'thùng', min: 1 },
-    'Tương ớt bịch (thùng)': { quantity: 1, unit: 'thùng', min: 1 },
-    'Tương cà bịch (thùng)': { quantity: 1, unit: 'thùng', min: 1 }
-  }
-};
+        let productionList = [];
+        let shipmentData = [];
+        let orderList = [];
 
- const webhookURL = "https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxEJ7VB6mDWorWZdzC_b6XULlcjQkL5zlJ8NuNAtWNeA4E5ba1Ga1MbnH8leMm0J_-R/exec"; // Thay bằng link của bạn
-
-
-let orderData = [];
-let orderList = [];
-let shipmentData = [];
-let inventoryData = [];
-
-
-
-        // Hiển thị ngày hiện tại
         function updateCurrentDate() {
             const now = new Date();
             const options = {
@@ -663,45 +610,27 @@ let inventoryData = [];
             };
             document.getElementById('currentDate').textContent = now.toLocaleDateString('vi-VN', options);
         }
-        
 
-
-        // Chuyển tab
         function showTab(event, tabName) {
             document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            const activePanel = document.getElementById(tabName);
-            if (activePanel) {
-                activePanel.classList.add('active');
-            }
-            
+            document.getElementById(tabName).classList.add('active');
             event.currentTarget.classList.add('active');
             
-            if (tabName === 'overview') {
-                updateProductionTable();
-            } else if (tabName === 'shipment') {
+            if (tabName === 'shipment') {
                 initIngredientList();
-                updateShipmentTable();
-            } else if (tabName === 'order') {
-                updateOrderTable();
-            } else if (tabName === 'inventory') {
-                updateInventoryTable();
             }
         }
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxjKyz3Ektiui9dxUTS4NYXyLTHLr0w7dhlkbDmqGOQ7OeubIBD7QH3MYol5CYYBFqqnA/exec'; // <-- Thay bằng link thật
+        function sendToSheet(sheetName, data) {
+            const payload = { sheetName, ...data };
+            return fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+            });
+        }
 
-function sendToSheet(sheetName, data) {
-    const payload = { sheetName, ...data };
-
-    return fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-    });
-}
-
-        // Khởi tạo danh sách nguyên liệu cho xuất hàng
         function initIngredientList() {
             const container = document.getElementById("ingredientList");
             container.innerHTML = "";
@@ -717,284 +646,95 @@ function sendToSheet(sheetName, data) {
             });
         }
 
-       let productionList = [];
+        function addProduction() {
+            const productType = document.getElementById('productType').value;
+            const quantity = parseInt(document.getElementById('pizzaQuantity').value);
+            const now = new Date();
+            const time = now.toLocaleString('vi-VN');
 
-function addProduction() {
-    const productType = document.getElementById('productType').value;
-    const quantity = parseInt(document.getElementById('pizzaQuantity').value);
-    const now = new Date();
-    const time = now.toLocaleString('vi-VN');
+            if (!productType || isNaN(quantity) || quantity <= 0) {
+                alert("Vui lòng nhập đúng thông tin.");
+                return;
+            }
 
-    if (!productType || isNaN(quantity) || quantity <= 0) {
-        alert("Vui lòng nhập đúng loại sản phẩm và số lượng.");
-        return;
-    }
-
-    productionList.push({
-        productType,
-        quantity,
-        time
-    });
-
-    renderProductionTable();
-    document.getElementById('pizzaQuantity').value = 1;
-}
-
-function renderProductionTable() {
-    const tbody = document.getElementById('productionTable');
-    tbody.innerHTML = "";
-
-    productionList.forEach((item, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item.time}</td>
-            <td>${item.productType}</td>
-            <td>${item.quantity}</td>
-            <td>⏳ Chờ gửi</td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-function sendAllProductions() {
-    if (productionList.length === 0) {
-        alert("Không có dữ liệu để gửi.");
-        return;
-    }
-
-    const promises = productionList.map(item => {
-        return sendToSheet("Lam", item);
-    });
-
-    Promise.all(promises)
-        .then(() => {
-            alert("✔️ Đã gửi toàn bộ danh sách sản xuất.");
-            productionList = [];
+            productionList.push({ productType, quantity, time });
             renderProductionTable();
-        })
-        .catch(err => {
-            console.error("❌ Lỗi khi gửi:", err);
-            alert("Có lỗi khi gửi. Hãy thử lại.");
-        });
-}
-
-            
-         function addShipment() {
-    const shop = document.getElementById("shopName").value;
-    const inputs = document.querySelectorAll('#ingredientList input');
-    const now = new Date();
-
-    const dataList = [];
-
-     inputs.forEach(input => {
-        const qty = parseInt(input.value);
-        if (qty > 0) {
-            dataList.push({
-                time: now.toLocaleString('vi-VN'),
-                shop: shop,
-                ingredient: input.dataset.name,
-                quantity: qty,
-                status: 'Đã giao'
-            });
+            document.getElementById('pizzaQuantity').value = 1;
         }
-    });
 
-    if (dataList.length === 0) {
-        alert("⚠️ Không có nguyên liệu nào để xuất!");
-        return;
-    }
-
-    sendToSheet("Xuat", { data: dataList })
-        .then(() => {
-            alert("✅ Đã tạo đơn xuất hàng cho quán " + shop);
-            inputs.forEach(input => input.value = 0);
-            shipmentData = [...dataList, ...shipmentData];
-            updateShipmentTable();
-        })
-        .catch(error => {
-            console.error('❌ Lỗi:', error);
-            alert("Gửi thất bại, thử lại.");
-        });
-}
-
-
-        // Thêm xuất hàng
-      function submitBulkShipment() {
-    const shop = document.getElementById("shopName").value;
-    const inputs = document.querySelectorAll('#ingredientList input');
-    const now = new Date();
-    const shipments = [];
-
-    inputs.forEach(input => {
-        const qty = parseInt(input.value);
-        if (qty > 0) {
-            shipments.push({
-                time: now.toLocaleString('vi-VN'),
-                shop: shop,
-                ingredient: input.dataset.name,
-                quantity: qty,
-                status: 'Đã giao'
-            });
-
-            // Clear input sau khi gửi
-            input.value = 0;
-        }
-    });
-
-    if (shipments.length === 0) {
-        alert("⚠️ Bạn chưa nhập số lượng nào.");
-        return;
-    }
-
-    // Gửi tất cả lên Google Sheets trong một lần
-    sendToSheet("Xuat", { data: shipments })
-        .then(() => {
-            alert("✅ Đã tạo đơn xuất hàng cho quán " + shop);
-            shipmentData = shipments.concat(shipmentData); // Cập nhật dữ liệu local nếu có
-            updateShipmentTable();
-        })
-        .catch(error => {
-            console.error("❌ Gửi thất bại:", error);
-            alert("Có lỗi xảy ra khi gửi dữ liệu.");
-        });
-}
-
- 
-    function addOrder() {
-      const ingredient = document.getElementById("ingredient").value;
-      const urgency = document.getElementById("orderUrgency").value;
-
-      if (!ingredient) {
-        alert("Vui lòng chọn nguyên liệu");
-        return;
-      }
-
-      orderList.push({ ingredient, urgency });
-      updateTable();
-    }
-
-    function updateTable() {
-      const tbody = document.getElementById("orderTable");
-      tbody.innerHTML = "";
-
-      orderList.forEach((order, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${order.ingredient}</td>
-          <td>${order.urgency}</td>
-          <td><button onclick="removeOrder(${index})">❌</button></td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    function removeOrder(index) {
-      orderList.splice(index, 1);
-      updateTable();
-    }
-
-   function submitOrder() {
-  if (orderList.length === 0) {
-    alert("Chưa có món nào trong danh sách đặt hàng.");
-    return;
-  }
-
-  const now = new Date().toLocaleString("vi-VN");
-  let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
-
-  orderList.forEach((item, index) => {
-    message += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
-  });
-
-  fetch(webhookURL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ content: message })
-  })
-    .then(() => {
-      alert("✅ Đã gửi đơn hàng thành công!");
-      orderList = []; // clear danh sách
-      updateOrderTable(); // cập nhật bảng hiển thị
-    })
-    .catch((error) => {
-      alert("❌ Lỗi khi gửi đơn hàng: " + error.message);
-    });
-}
-
-
-    // Tạo nội dung gửi đi
-    let content = "📦 **Đơn đặt hàng mới:**\n";
-    orderData.forEach((item, index) => {
-        content += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
-    });
-
-    // Gửi tới Apps Script trung gian
-    fetch("https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            message: content
-        })
-    }).then(() => {
-        alert("Đã gửi đơn hàng thành công!");
-        orderData = [];
-        updateOrderTable();
-    }).catch((error) => {
-        alert("Lỗi khi gửi đơn hàng: " + error);
-    });
-
-
-    function submitOrders() {
-      if (orderList.length === 0) {
-        alert("Chưa có món nào để gửi");
-        return;
-      }
-
-      const now = new Date().toLocaleString("vi-VN");
-      let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
-
-      orderList.forEach((o, i) => {
-        message += `\n${i + 1}. ${o.ingredient} (${o.urgency})`;
-      });
-
-      fetch(webhookURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content: message })
-      })
-      .then(() => {
-        alert("✅ Đã gửi đơn hàng thành công!");
-        orderList.length = 0;
-        updateTable();
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("❌ Lỗi gửi Discord: " + err.message);
-      });
-    }
-        // Cập nhật bảng sản xuất
-        function updateProductionTable() {
+        function renderProductionTable() {
             const tbody = document.getElementById('productionTable');
-            tbody.innerHTML = '';
-            
-            productionData.forEach(item => {
-                const row = tbody.insertRow();
+            tbody.innerHTML = "";
+
+            productionList.forEach((item) => {
+                const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item.time}</td>
-                    <td>${item.type}</td>
+                    <td>${item.productType}</td>
                     <td>${item.quantity}</td>
-                    <td><span class="status-badge status-completed">${item.status}</span></td>
+                    <td><span class="status-badge status-pending">⏳ Chờ gửi</span></td>
                 `;
+                tbody.appendChild(row);
             });
         }
 
-        // Cập nhật bảng xuất hàng
+        function sendAllProductions() {
+            if (productionList.length === 0) {
+                alert("Không có dữ liệu để gửi.");
+                return;
+            }
+
+            const promises = productionList.map(item => sendToSheet("Lam", item));
+
+            Promise.all(promises)
+                .then(() => {
+                    alert("✔️ Đã gửi thành công.");
+                    productionList = [];
+                    renderProductionTable();
+                })
+                .catch(err => {
+                    console.error("❌ Lỗi:", err);
+                    alert("Có lỗi xảy ra.");
+                });
+        }
+
+        function addShipment() {
+            const shop = document.getElementById("shopName").value;
+            const inputs = document.querySelectorAll('#ingredientList input');
+            const now = new Date();
+            const dataList = [];
+
+            inputs.forEach(input => {
+                const qty = parseInt(input.value);
+                if (qty > 0) {
+                    dataList.push({
+                        time: now.toLocaleString('vi-VN'),
+                        shop: shop,
+                        ingredient: input.dataset.name,
+                        quantity: qty,
+                        status: 'Đã giao'
+                    });
+                }
+            });
+
+            if (dataList.length === 0) {
+                alert("⚠️ Chưa có nguyên liệu nào được chọn!");
+                return;
+            }
+
+            sendToSheet("Xuat", { data: dataList })
+                .then(() => {
+                    alert("✅ Đã tạo đơn xuất cho " + shop);
+                    inputs.forEach(input => input.value = 0);
+                    shipmentData = [...dataList, ...shipmentData];
+                    updateShipmentTable();
+                })
+                .catch(error => {
+                    console.error('❌ Lỗi:', error);
+                    alert("Gửi thất bại.");
+                });
+        }
+
         function updateShipmentTable() {
             const tbody = document.getElementById('shipmentTable');
             tbody.innerHTML = '';
@@ -1011,85 +751,88 @@ function sendAllProductions() {
             });
         }
 
-       
+        function addOrder() {
+            const ingredient = document.getElementById("ingredient").value;
+            const urgency = document.getElementById("orderUrgency").value;
 
-      
+            if (!ingredient) {
+                alert("Vui lòng chọn nguyên liệu");
+                return;
+            }
 
-      
+            orderList.push({ ingredient, urgency });
+            updateOrderTable();
+        }
 
-function saveProduction(sheet, data) {
-  sheet.appendRow([
-    new Date(),
-    data.productType || "",
-    data.quantity || 0
-  ]);
-}
+        function updateOrderTable() {
+            const tbody = document.getElementById("orderTable");
+            tbody.innerHTML = "";
 
-function saveShipment(sheet, data) {
-  sheet.appendRow([
-    new Date(),
-    data.time || "",
-    data.shop || "",
-    data.ingredient || "",
-    data.quantity || 0,
-    data.status || ""
-  ]);
-}
+            orderList.forEach((order, index) => {
+                const row = document.createElement("tr");
+                const statusClass = order.urgency === 'Gấp' ? 'status-urgent' : 'status-pending';
+                row.innerHTML = `
+                    <td>${order.ingredient}</td>
+                    <td><span class="status-badge ${statusClass}">${order.urgency}</span></td>
+                    <td><button class="btn btn-danger" onclick="removeOrder(${index})">❌</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
 
-function saveInventory(sheet, data) {
-  sheet.appendRow([
-    new Date(),
-    data.time || "",
-    data.group || "",
-    data.item || "",
-    data.quantity || 0
-  ]);
-}
+        function removeOrder(index) {
+            orderList.splice(index, 1);
+            updateOrderTable();
+        }
 
-function updateOrderTable() {
-  const tbody = document.getElementById("orderTable");
-  tbody.innerHTML = "";
+        function submitOrder() {
+            if (orderList.length === 0) {
+                alert("Chưa có món nào trong danh sách.");
+                return;
+            }
 
-  orderList.forEach((order, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${order.ingredient}</td>
-      <td>${order.urgency}</td>
-      <td><button onclick="removeOrder(${index})">❌</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-}
+            const now = new Date().toLocaleString("vi-VN");
+            let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
 
-    
-        
+            orderList.forEach((item, index) => {
+                message += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
+            });
 
-        // Khởi tạo ứng dụng
+            fetch(webhookURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ content: message })
+            })
+            .then(() => {
+                alert("✅ Đã gửi đơn hàng thành công!");
+                orderList = [];
+                updateOrderTable();
+            })
+            .catch((error) => {
+                alert("❌ Lỗi khi gửi: " + error.message);
+            });
+        }
+
+        function checkLogin() {
+            const inputID = document.getElementById("loginID").value.trim();
+            const inputPass = document.getElementById("loginPassword").value.trim();
+            const errorMsg = document.getElementById("loginError");
+
+            const foundUser = USERS.find(user => user.id === inputID && user.password === inputPass);
+
+            if (foundUser) {
+                document.getElementById("loginScreen").style.display = "none";
+            } else {
+                errorMsg.textContent = "❌ Sai thông tin đăng nhập.";
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentDate();
             initIngredientList();
-            updateProductionTable();
-            updateShipmentTable();
-            updateOrderTable();
-            updateInventoryTable();
         });
-
-        // Danh sách tài khoản cho phép đăng nhập (có thể thêm nhiều)
-
-function checkLogin() {
-  const inputID = document.getElementById("loginID").value.trim();
-  const inputPass = document.getElementById("loginPassword").value.trim();
-  const errorMsg = document.getElementById("loginError");
-
-  const foundUser = USERS.find(user => user.id === inputID && user.password === inputPass);
-
-  if (foundUser) {
-    document.getElementById("loginScreen").style.display = "none"; // Ẩn màn hình login
-  } else {
-    errorMsg.textContent = "❌ Sai ID hoặc mật khẩu, vui lòng thử lại.";
-  }
-}
-
     </script>
 </body>
 </html>
