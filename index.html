@@ -594,7 +594,7 @@
         ];
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxjKyz3Ektiui9dxUTS4NYXyLTHLr0w7dhlkbDmqGOQ7OeubIBD7QH3MYol5CYYBFqqnA/exec';
-        const webhookURL = "https://discord.com/api/webhooks/1382789073793712248/aoGn859F1nrWGNSziO1MQEfO7xPs_uTjVtttxEqH2eu_fTIIO34VPyhTuCUnOr2x_KBg";
+        const webhookProxyURL = "https://script.google.com/macros/s/AKfycby1VIM8rtpDAw66ssYJyMQHTVkZH6bcjTrIwQ9pfzrbQUnNA5-TwwSVcThQ3L3AVZ0MtA/exec"; // Link Apps Script bạn vừa deploy
 
         let productionList = [];
         let shipmentData = [];
@@ -786,34 +786,37 @@
         }
 
         function submitOrder() {
-            if (orderList.length === 0) {
-                alert("Chưa có món nào trong danh sách.");
-                return;
-            }
+    if (orderList.length === 0) {
+        alert("Chưa có món nào trong danh sách.");
+        return;
+    }
 
-            const now = new Date().toLocaleString("vi-VN");
-            let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
+    const now = new Date().toLocaleString("vi-VN");
+    let message = `📦 **Đơn đặt hàng lúc ${now}**\n`;
 
-            orderList.forEach((item, index) => {
-                message += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
-            });
+    orderList.forEach((item, index) => {
+        message += `\n${index + 1}. ${item.ingredient} - ${item.urgency}`;
+    });
 
-            fetch(webhookURL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ content: message })
-            })
-            .then(() => {
-                alert("✅ Đã gửi đơn hàng thành công!");
-                orderList = [];
-                updateOrderTable();
-            })
-            .catch((error) => {
-                alert("❌ Lỗi khi gửi: " + error.message);
-            });
-        }
+    fetch(webhookProxyURL, {
+  method: "POST",
+  mode: "no-cors",  // ⚠️ Không đọc được phản hồi nhưng tránh lỗi CORS
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ content: message })
+})
+.then(() => {
+    alert("✅ Đã gửi đơn hàng thành công!");
+    orderList = [];
+    updateOrderTable();
+})
+.catch((error) => {
+    alert("❌ Lỗi khi gửi: " + error.message);
+});
+
+}
+
 
         function checkLogin() {
             const inputID = document.getElementById("loginID").value.trim();
