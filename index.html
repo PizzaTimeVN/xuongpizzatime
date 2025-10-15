@@ -283,7 +283,7 @@
         <div class="main-screen" id="mainScreen">
             <div class="current-info">
                 Ngày: <span id="currentDate"></span> | Người nhập: <span id="currentUser"></span>
-                <button class="btn btn-logout btn-small" onclick="logout()">Đăng xuất</button>
+                <button class="btn btn-logout" onclick="logout()">Đăng xuất</button>
             </div>
 
             <div class="menu-grid" id="menuGrid">
@@ -339,9 +339,10 @@
             <div class="store-select">
                 <label>Chọn Quán</label>
                 <select id="storeSelect">
-                    <option value="Quán 1">Quán 1</option>
-                    <option value="Quán 2">Quán 2</option>
-                    <option value="Quán 3">Quán 3</option>
+                    <option value="DH">DH</option>
+                    <option value="NH">NH</option>
+                    <option value="HXH">HXH</option>
+                    <option value="PY">PY</option>
                 </select>
             </div>
             <div class="items-container" id="exportItemsContainer"></div>
@@ -381,7 +382,7 @@
 
     <script>
         // Supabase configuration - REPLACE WITH YOUR CREDENTIALS
-        const SUPABASE_URL = 'https://tyuufjwutazjfuiawiul.supabase.co';
+        const SUPABASE_URL = 'https://tyuufjwutazjfuiawiul.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5dXVmand1dGF6amZ1aWF3aXVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDk4OTIsImV4cCI6MjA3NjA4NTg5Mn0.8WEsb2tBD6akNA9h9tR9zIAqjkZz0xZYVNbYCx2dEbc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
@@ -493,323 +494,296 @@ let currentDate = '';
 let currentUser = '';
 
 function login() {
-    const date = document.getElementById('loginDate').value;
-    const name = document.getElementById('loginName').value.trim();
-    const password = document.getElementById('loginPassword').value;
+        const date = document.getElementById('loginDate').value;
+        const name = document.getElementById('loginName').value.trim();
+        const password = document.getElementById('loginPassword').value;
 
-    if (!date || !name || !password) {
-        alert('Vui lòng nhập đầy đủ thông tin!');
-        return;
+        if (!date || !name || !password) {
+            alert('Vui lòng nhập đầy đủ thông tin!');
+            return;
+        }
+
+        if (!(name in users) || users[name] !== password) {
+            alert('Tên người dùng hoặc mật khẩu không đúng!');
+            return;
+        }
+
+        currentDate = date;
+        currentUser = name;
+
+        localStorage.setItem('currentDate', currentDate);
+        localStorage.setItem('currentUser', currentUser);
+
+        document.getElementById('loginScreen').classList.remove('active');
+        document.getElementById('mainScreen').classList.add('active');
+
+        document.getElementById('currentDate').textContent = currentDate;
+        document.getElementById('currentUser').textContent = currentUser;
+
+        loadInventory();
     }
 
-    // Kiểm tra user + password
-    if (!(name in users) || users[name] !== password) {
-        alert('Tên người dùng hoặc mật khẩu không đúng!');
-        return;
+    function logout() {
+        currentDate = '';
+        currentUser = '';
+        localStorage.removeItem('currentDate');
+        localStorage.removeItem('currentUser');
+
+        document.getElementById('mainScreen').classList.remove('active');
+        document.getElementById('loginScreen').classList.add('active');
+
+        document.getElementById('loginDate').value = '';
+        document.getElementById('loginName').value = '';
+        document.getElementById('loginPassword').value = '';
     }
 
-    // Lưu thông tin đăng nhập vào biến toàn cục và localStorage
-    currentDate = date;
-    currentUser = name;
-    localStorage.setItem('currentDate', date);
-    localStorage.setItem('currentUser', name);
+    // --- Load Inventory ---
+    async function loadInventory() {
+        const { data, error } = await supabase
+            .from('inventory')
+            .select('*');
 
-    // Hiển thị thông tin trên giao diện chính
-    document.getElementById('currentDate').textContent = currentDate;
-    document.getElementById('currentUser').textContent = currentUser;
-
-    // Ẩn login, hiển thị app chính
-    document.getElementById('loginScreen').classList.remove('active');
-    document.getElementById('mainScreen').classList.add('active');
-
-    // Load dữ liệu kho hoặc các thông tin khác
-    loadInventory();
-}
-
-        
-        function showScreen(screen) {
-            document.getElementById('mainScreen').style.display = 'none';
-            
-            const screens = ['rawInputScreen', 'productionInputScreen', 'exportProductScreen', 'inventoryScreen', 'alertsScreen'];
-            screens.forEach(s => document.getElementById(s).style.display = 'none');
-            
-            switch(screen) {
-                case 'rawInput':
-                    document.getElementById('rawInputScreen').style.display = 'block';
-                    initRawInput();
-                    break;
-                case 'productionInput':
-                    document.getElementById('productionInputScreen').style.display = 'block';
-                    initProdInput();
-                    break;
-                case 'exportProduct':
-                    document.getElementById('exportProductScreen').style.display = 'block';
-                    initExportInput();
-                    break;
-                case 'inventory':
-                    document.getElementById('inventoryScreen').style.display = 'block';
-                    displayInventory();
-                    break;
-                case 'alerts':
-                    document.getElementById('alertsScreen').style.display = 'block';
-                    displayAlerts();
-                    break;
-            }
-        }
-        
-        function backToMenu() {
-            const screens = ['rawInputScreen', 'productionInputScreen', 'exportProductScreen', 'inventoryScreen', 'alertsScreen'];
-            screens.forEach(s => document.getElementById(s).style.display = 'none');
-            document.getElementById('mainScreen').style.display = 'block';
-        }
-        
-        function createItemRow(containerId, categories) {
-            const container = document.getElementById(containerId);
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            
-            let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
-            for (let cat in categories) {
-                optionsHTML += `<optgroup label="${cat}">`;
-                categories[cat].forEach(item => {
-                    optionsHTML += `<option value="${item}">${item}</option>`;
-                });
-                optionsHTML += '</optgroup>';
-            }
-            
-            row.innerHTML = `
-                <select class="item-select">${optionsHTML}</select>
-                <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
-                <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
-            `;
-            
-            container.appendChild(row);
-        }
-        
-        function initRawInput() {
-            document.getElementById('rawItemsContainer').innerHTML = '';
-            document.getElementById('rawSuccessMsg').innerHTML = '';
-            addRawItem();
-        }
-        
-        function addRawItem() {
-            const rawCategories = {
-                '🥩 Nguyên liệu sống': categories['🥩 Nguyên liệu sống'],
-                '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
-                '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
-                '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
-            };
-            createItemRow('rawItemsContainer', rawCategories);
-        }
-        
-        function initProdInput() {
-            document.getElementById('prodItemsContainer').innerHTML = '';
-            document.getElementById('prodSuccessMsg').innerHTML = '';
-            addProdItem();
-        }
-        
-        function addProdItem() {
-            createItemRow('prodItemsContainer', {'🍕 Thành phẩm': categories['🍕 Thành phẩm']});
-        }
-        
-        function initExportInput() {
-            document.getElementById('exportItemsContainer').innerHTML = '';
-            document.getElementById('exportSuccessMsg').innerHTML = '';
-            addExportItem();
+        if (error) {
+            console.error('Lỗi load inventory:', error);
+            return;
         }
 
-        function addExportItem() {
-            createItemRow('exportItemsContainer', {
-                '🍕 Thành phẩm': categories['🍕 Thành phẩm'],
-                '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
-                '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
-                '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
-            })
-             }
-        
-        
-        async function saveRawInput() {
-            const items = getItemsFromContainer('rawItemsContainer');
-            if (items.length === 0) return;
-            
-            for (let item of items) {
-                await updateInventory(item.name, item.quantity, 'raw_input');
+        inventoryData = {};
+        data.forEach(row => {
+            inventoryData[row.item] = row.quantity;
+        });
+
+        displayInventory();
+        displayAlerts();
+    }
+
+    // --- Update Inventory và log ---
+        async function updateInventory(itemName, quantityChange, type = 'manual', store = null) {
+            const currentQty = inventoryData[itemName] || 0;
+            const newQty = currentQty + quantityChange;
+            inventoryData[itemName] = newQty;
+
+            // Cập nhật Supabase inventory
+            const { error: invError } = await supabase
+                .from('inventory')
+                .upsert({ item: itemName, quantity: newQty }, { onConflict: 'item' });
+
+            if (invError) console.error('❌ Lỗi ghi inventory:', invError);
+
+            // Ghi log theo loại giao dịch
+            const today = new Date().toISOString().slice(0, 10);
+
+            if (type === 'raw_input') {
+                const { error } = await supabase.from('raw_materials_input').insert([{
+                    date: today,
+                    user_name: currentUser,
+                    item: itemName,
+                    quantity: quantityChange
+                }]);
+                if (error) console.error('❌ Lỗi ghi raw_materials_input:', error);
+
+            } else if (type === 'production') {
+                const { error } = await supabase.from('production').insert([{
+                    date: today,
+                    user_name: currentUser,
+                    item: itemName,
+                    quantity: quantityChange
+                }]);
+                if (error) console.error('❌ Lỗi ghi production:', error);
+
+            } else if (type === 'export') {
+                const { error } = await supabase.from('exports').insert([{
+                    date: today,
+                    user_name: currentUser,
+                    store: store,
+                    item: itemName,
+                    quantity: quantityChange
+                }]);
+                if (error) console.error('❌ Lỗi ghi exports:', error);
             }
-            
-            document.getElementById('rawSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
-            setTimeout(() => {
-                document.getElementById('rawSuccessMsg').innerHTML = '';
-                initRawInput();
-            }, 2000);
-        }
-        
-        async function saveProduction() {
-            const items = getItemsFromContainer('prodItemsContainer');
-            if (items.length === 0) return;
-            
-            for (let item of items) {
-                await updateInventory(item.name, item.quantity, 'production');
-            }
-            
-            document.getElementById('prodSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
-            setTimeout(() => {
-                document.getElementById('prodSuccessMsg').innerHTML = '';
-                initProdInput();
-            }, 2000);
-        }
-        
-        async function saveExport() {
-            const store = document.getElementById('storeSelect').value;
-            const items = getItemsFromContainer('exportItemsContainer');
-            if (items.length === 0) return;
-            
-            for (let item of items) {
-                await updateInventory(item.name, -item.quantity, 'export', store);
-            }
-            
-            document.getElementById('exportSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã xuất hàng thành công!</div>';
-            setTimeout(() => {
-                document.getElementById('exportSuccessMsg').innerHTML = '';
-                initExportInput();
-            }, 2000);
-        }
-        
-        function getItemsFromContainer(containerId) {
-            const container = document.getElementById(containerId);
-            const rows = container.querySelectorAll('.item-row');
-            const items = [];
-            
-            rows.forEach(row => {
-                const name = row.querySelector('.item-select').value;
-                const quantity = parseFloat(row.querySelector('.item-quantity').value);
-                
-                if (name && quantity > 0) {
-                    items.push({ name, quantity });
-                }
+
+
+        displayInventory();
+        displayAlerts();
+    }
+
+    // --- Item Row UI ---
+    function createItemRow(containerId, categoryList) {
+        const container = document.getElementById(containerId);
+        const row = document.createElement('div');
+        row.className = 'item-row';
+
+        let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
+        for (let cat in categoryList) {
+            optionsHTML += `<optgroup label="${cat}">`;
+            categoryList[cat].forEach(item => {
+                optionsHTML += `<option value="${item}">${item}</option>`;
             });
-            
-            return items;
+            optionsHTML += '</optgroup>';
         }
-        
-        async function updateInventory(itemName, quantity, type, store = '') {
-            if (!inventoryData[itemName]) {
-                inventoryData[itemName] = 0;
-            }
-            
-            inventoryData[itemName] += quantity;
-            
-            // Save to localStorage (Supabase would be used here in production)
-            localStorage.setItem('inventory', JSON.stringify(inventoryData));
-            
-            // Log transaction
-            const transaction = {
-                date: currentDate,
-                user: currentUser,
-                type: type,
-                item: itemName,
-                quantity: quantity,
-                store: store,
-                timestamp: new Date().toISOString()
-            };
-            
-            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            transactions.push(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-        }
-        
-        function loadInventory() {
-            const stored = localStorage.getItem('inventory');
-            if (stored) {
-                inventoryData = JSON.parse(stored);
-            } else {
-                inventoryData = {};
-            }
-        }
-        
-        function displayInventory() {
-            const tbody = document.getElementById('inventoryBody');
-            tbody.innerHTML = '';
-            
-            for (let cat in categories) {
-                categories[cat].forEach(item => {
-                    const quantity = inventoryData[item] || 0;
-                    const row = tbody.insertRow();
-                    row.innerHTML = `
-                        <td>${cat}</td>
-                        <td>${item}</td>
-                        <td><input type="number" value="${quantity}" step="0.1" onchange="updateInventoryDirect('${item}', this.value)" style="width: 100px;" /></td>
-                        <td>${quantity < 3 ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
-                    `;
-                });
-            }
-        }
-        
-        function updateInventoryDirect(itemName, newValue) {
-            inventoryData[itemName] = parseFloat(newValue) || 0;
-            localStorage.setItem('inventory', JSON.stringify(inventoryData));
-            displayInventory();
-        }
-        
-        function searchInventory() {
-            const search = document.getElementById('inventorySearch').value.toLowerCase();
-            const rows = document.getElementById('inventoryBody').querySelectorAll('tr');
-            
-            rows.forEach(row => {
-                const itemName = row.cells[1].textContent.toLowerCase();
-                row.style.display = itemName.includes(search) ? '' : 'none';
-            });
-        }
-      
-        function displayAlerts() {
-    const container = document.getElementById('alertsContainer');
-    container.innerHTML = '';
 
-    let lowStockItems = [];
+        row.innerHTML = `
+            <select class="item-select">${optionsHTML}</select>
+            <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
+            <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
+        `;
 
-    // Duyệt theo group
-    for (const [groupName, items] of Object.entries(categories)) {
-        items.forEach(item => {
-            const qty = parseFloat(inventoryData[item] || 0);
-            if (qty < 3) {
-                lowStockItems.push({
-                    name: item,
-                    quantity: qty,
-                    group: groupName
-                });
-            }
+        container.appendChild(row);
+    }
+
+    function getItemsFromContainer(containerId) {
+        const container = document.getElementById(containerId);
+        const rows = container.querySelectorAll('.item-row');
+        const items = [];
+
+        rows.forEach(row => {
+            const name = row.querySelector('.item-select').value;
+            const quantity = parseFloat(row.querySelector('.item-quantity').value);
+            if (name && quantity > 0) items.push({ name, quantity });
+        });
+
+        return items;
+    }
+
+    // --- Init các màn hình ---
+    function initRawInput() {
+        document.getElementById('rawItemsContainer').innerHTML = '';
+        document.getElementById('rawSuccessMsg').innerHTML = '';
+        addRawItem();
+    }
+
+    function addRawItem() {
+        const rawCategories = {
+            '🥩 Nguyên liệu sống': categories['🥩 Nguyên liệu sống'],
+            '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
+            '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
+            '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
+        };
+        createItemRow('rawItemsContainer', rawCategories);
+    }
+
+    function initProdInput() {
+        document.getElementById('prodItemsContainer').innerHTML = '';
+        document.getElementById('prodSuccessMsg').innerHTML = '';
+        addProdItem();
+    }
+
+    function addProdItem() {
+        createItemRow('prodItemsContainer', {'🍕 Thành phẩm': categories['🍕 Thành phẩm']});
+    }
+
+    function initExportInput() {
+        document.getElementById('exportItemsContainer').innerHTML = '';
+        document.getElementById('exportSuccessMsg').innerHTML = '';
+        addExportItem();
+    }
+
+    function addExportItem() {
+        createItemRow('exportItemsContainer', {
+            '🍕 Thành phẩm': categories['🍕 Thành phẩm'],
+            '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
+            '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
+            '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
         });
     }
 
-    if (lowStockItems.length === 0) {
-        container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
-    } else {
-        let html = '<div class="alert">';
-        lowStockItems.forEach(item => {
-            html += `<div class="alert-item">⚠️ [${item.group}] <strong>${item.name}</strong>: ${item.quantity}</div>`;
-        });
-        html += '</div>';
-        container.innerHTML = html;
+    // --- Save functions ---
+    async function saveRawInput() {
+        const items = getItemsFromContainer('rawItemsContainer');
+        if (!items.length) return;
+        for (let item of items) await updateInventory(item.name, item.quantity, 'raw_input');
+        document.getElementById('rawSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
+        setTimeout(() => initRawInput(), 2000);
     }
-}
 
-function logout() {
-    // Xóa thông tin đăng nhập khỏi biến và localStorage
-    currentDate = '';
-    currentUser = '';
-    localStorage.removeItem('currentDate');
-    localStorage.removeItem('currentUser');
+    async function saveProduction() {
+        const items = getItemsFromContainer('prodItemsContainer');
+        if (!items.length) return;
+        for (let item of items) await updateInventory(item.name, item.quantity, 'production');
+        document.getElementById('prodSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
+        setTimeout(() => initProdInput(), 2000);
+    }
 
-    // Ẩn app chính, hiện màn hình login
-    document.getElementById('mainScreen').classList.remove('active');
-    document.getElementById('loginScreen').classList.add('active');
+    async function saveExport() {
+        const store = document.getElementById('storeSelect').value;
+        const items = getItemsFromContainer('exportItemsContainer');
+        if (!items.length) return;
+        for (let item of items) await updateInventory(item.name, -item.quantity, 'export', store);
+        document.getElementById('exportSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã xuất hàng thành công!</div>';
+        setTimeout(() => initExportInput(), 2000);
+    }
 
-    // Reset input login
-    document.getElementById('loginDate').value = '';
-    document.getElementById('loginName').value = '';
-    document.getElementById('loginPassword').value = '';
-}
+    // --- Display Inventory & Alerts ---
+    function displayInventory() {
+        const tbody = document.getElementById('inventoryBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
 
-             
+        for (let cat in categories) {
+            categories[cat].forEach(item => {
+                const qty = inventoryData[item] || 0;
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${cat}</td>
+                    <td>${item}</td>
+                    <td><input type="number" value="${qty}" step="0.1"
+                        onchange="updateInventoryDirect('${item}', this.value)"
+                        style="width:100px" /></td>
+                    <td>${qty < 3 ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
+                `;
+            });
+        }
+    }
+
+    function updateInventoryDirect(itemName, newValue) {
+        const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
+        updateInventory(itemName, diff, 'manual');
+    }
+
+    function displayAlerts() {
+        const container = document.getElementById('alertsContainer');
+        container.innerHTML = '';
+        let lowStockItems = [];
+
+        for (const [groupName, items] of Object.entries(categories)) {
+            items.forEach(item => {
+                const qty = parseFloat(inventoryData[item] || 0);
+                if (qty < 3) lowStockItems.push({ name: item, quantity: qty, group: groupName });
+            });
+        }
+
+        if (!lowStockItems.length) {
+            container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
+        } else {
+            let html = '<div class="alert">';
+            lowStockItems.forEach(item => {
+                html += `<div class="alert-item">⚠️ [${item.group}] <strong>${item.name}</strong>: ${item.quantity}</div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+    }
+
+    // --- Navigation ---
+    function showScreen(screen) {
+        document.getElementById('mainScreen').style.display = 'none';
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen']
+            .forEach(s => document.getElementById(s).style.display='none');
+
+        switch(screen) {
+            case 'rawInput': document.getElementById('rawInputScreen').style.display='block'; initRawInput(); break;
+            case 'productionInput': document.getElementById('productionInputScreen').style.display='block'; initProdInput(); break;
+            case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
+            case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
+            case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
+        }
+    }
+
+    function backToMenu() {
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen']
+            .forEach(s => document.getElementById(s).style.display='none');
+        document.getElementById('mainScreen').style.display='block';
+    }      
     </script>
 </body>
 </html>
