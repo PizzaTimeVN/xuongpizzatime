@@ -785,7 +785,7 @@ function login() {
     } else {
         let html = '<div class="alert">';
         lowStockItems.forEach(item => {
-            html += `<div class="alert-item">⚠️ [${item.group}] <strong>${item.name}</strong>: Còn ${item.quantity} (< 3)</div>`;
+            html += `<div class="alert-item">⚠️ [${item.group}] <strong>${item.name}</strong>: ${item.quantity}</div>`;
         });
         html += '</div>';
         container.innerHTML = html;
