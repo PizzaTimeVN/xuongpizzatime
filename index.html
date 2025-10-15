@@ -715,25 +715,101 @@ function login() {
 
     // --- Display Inventory & Alerts ---
     function displayInventory() {
-        const tbody = document.getElementById('inventoryBody');
-        if (!tbody) return;
-        tbody.innerHTML = '';
+    const tbody = document.getElementById('inventoryBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
 
-        for (let cat in categories) {
+    for (let cat in categories) {
+        // --- Hàng tiêu đề danh mục ---
+        const catRow = tbody.insertRow();
+        catRow.classList.add('category-row');
+        catRow.innerHTML = `<td colspan="4" style="font-weight:bold; cursor:pointer;">▶ ${cat}</td>`;
+
+        // --- Bắt sự kiện click để mở/đóng danh mục ---
+        catRow.addEventListener('click', () => {
+            catRow.classList.toggle('expanded');
+            const expanded = catRow.classList.contains('expanded');
+            catRow.querySelector('td').innerHTML = `${expanded ? '▼' : '▶'} ${cat}`;
+
+            // Ẩn/hiện các hàng sản phẩm thuộc danh mục này
             categories[cat].forEach(item => {
-                const qty = inventoryData[item] || 0;
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${cat}</td>
-                    <td>${item}</td>
-                    <td><input type="number" value="${qty}" step="0.1"
-                        onchange="updateInventoryDirect('${item}', this.value)"
-                        style="width:100px" /></td>
-                    <td>${qty < 3 ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
-                `;
+                const itemRow = document.getElementById(`row-${item.replace(/\s/g, '-')}`);
+                if (itemRow) itemRow.style.display = expanded ? 'table-row' : 'none';
             });
-        }
+        });
+
+        // --- Các hàng sản phẩm ---
+        categories[cat].forEach(item => {
+            const qty = inventoryData[item] || 0;
+            const row = tbody.insertRow();
+            row.id = `row-${item.replace(/\s/g, '-')}`;
+            row.classList.add('product-row');
+            row.style.display = 'none'; // ẩn mặc định, chỉ hiện khi mở danh mục
+
+            row.innerHTML = `
+                <td>${cat}</td>
+                <td>${item}</td>
+                <td><input type="number" value="${qty}" step="0.1"
+                    onchange="updateInventoryDirect('${item}', this.value)"
+                    style="width:100px" /></td>
+                <td>${qty < 3 ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
+            `;
+        });
     }
+}
+
+
+    function searchInventory() {
+    const keyword = document
+        .getElementById('inventorySearch')
+        .value.trim()
+        .toLowerCase();
+
+    // Ẩn hoặc hiện từng hàng sản phẩm theo từ khóa
+    const rows = document.querySelectorAll('#inventoryBody tr.product-row');
+    let matchCount = 0;
+
+    rows.forEach(row => {
+        const name = row
+            .querySelector('td:nth-child(2)')
+            .textContent.toLowerCase();
+
+        if (name.includes(keyword)) {
+            row.style.display = 'table-row';
+            matchCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // Nếu đang tìm kiếm, mở rộng tất cả danh mục để dễ thấy
+    const catRows = document.querySelectorAll('#inventoryBody tr.category-row');
+    catRows.forEach(row => {
+        const isSearching = keyword.length > 0;
+        const expanded = row.classList.contains('expanded');
+
+        if (isSearching && !expanded) {
+            row.classList.add('expanded');
+            row.querySelector('td').innerHTML = `▼ ${row.textContent.slice(2)}`;
+        } else if (!isSearching && expanded) {
+            row.classList.remove('expanded');
+            row.querySelector('td').innerHTML = `▶ ${row.textContent.slice(2)}`;
+        }
+    });
+
+    // Nếu không tìm thấy kết quả
+    const inventoryBody = document.getElementById('inventoryBody');
+    const noResultRow = document.getElementById('noResultRow');
+    if (noResultRow) noResultRow.remove();
+
+    if (keyword && matchCount === 0) {
+        const noRow = document.createElement('tr');
+        noRow.id = 'noResultRow';
+        noRow.innerHTML = `<td colspan="4" style="text-align:center; color:#999;">Không tìm thấy mặt hàng nào</td>`;
+        inventoryBody.appendChild(noRow);
+    }
+}
+
 
     function updateInventoryDirect(itemName, newValue) {
         const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
