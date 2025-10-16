@@ -307,6 +307,10 @@
                     <h3>Cảnh Báo Hàng</h3>
                     <p>Mặt hàng sắp hết</p>
                 </div>
+                <div class="menu-card" onclick="showScreen('storeInventory')">
+                    <h3>Tồn Kho Quán</h3>
+                    <p>Xem hàng tồn tại từng quán</p>
+                </div>
             </div>
         </div>
 
@@ -377,6 +381,24 @@
             <div id="alertsContainer"></div>
         </div>
     </div>
+
+            <!-- Store Inventory Screen -->
+        <div id="storeInventoryScreen" style="display:none;">
+            <button class="btn btn-secondary back-btn" onclick="backToMenu()">← Quay Lại</button>
+            <h2>Tồn Kho Các Quán</h2>
+            <div class="store-select">
+                <label>Chọn Quán</label>
+                <select id="storeInventorySelect" onchange="loadStoreInventory()">
+                    <option value="">-- Chọn Quán --</option>
+                    <option value="DH">DH</option>
+                    <option value="NH">NH</option>
+                    <option value="HXH">HXH</option>
+                    <option value="PY">PY</option>
+                </select>
+            </div>
+            <div id="storeInventoryContainer"></div>
+        </div>
+
 
    
 
@@ -484,7 +506,7 @@
         document.getElementById('loginDate').valueAsDate = new Date();
         
         const users = {
-    "Bo": "123456",
+    "Bo": "123",
     "Nhu2k6": "Xinh@Dep",
     "Ngan2k2": "Dep$Gioi",
     "admin": "123"
@@ -816,34 +838,76 @@ function login() {
         updateInventory(itemName, diff, 'manual');
     }
 
-    function displayAlerts() {
-        const container = document.getElementById('alertsContainer');
-        container.innerHTML = '';
-        let lowStockItems = [];
+function displayAlerts() {
+    const container = document.getElementById('alertsContainer');
+    container.innerHTML = '';
+    let lowStockItems = [];
 
-        for (const [groupName, items] of Object.entries(categories)) {
-            items.forEach(item => {
-                const qty = parseFloat(inventoryData[item] || 0);
-                if (qty < 3) lowStockItems.push({ name: item, quantity: qty, group: groupName });
-            });
-        }
-
-        if (!lowStockItems.length) {
-            container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
-        } else {
-            let html = '<div class="alert">';
-            lowStockItems.forEach(item => {
-                html += `<div class="alert-item">⚠️ [${item.group}] <strong>${item.name}</strong>: ${item.quantity}</div>`;
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
+    for (const [groupName, items] of Object.entries(categories)) {
+        items.forEach(item => {
+            const qty = parseFloat(inventoryData[item] || 0);
+            if (qty < 3) lowStockItems.push({ name: item, quantity: qty });
+        });
     }
 
-    // --- Navigation ---
+    if (!lowStockItems.length) {
+        container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
+    } else {
+        let html = '<div class="alert">';
+        lowStockItems.forEach(item => {
+            html += `<div class="alert-item">⚠️ <strong>${item.name}</strong>: ${item.quantity}</div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+}
+
+
+    async function loadStoreInventory() {
+    const store = document.getElementById('storeInventorySelect').value;
+    const container = document.getElementById('storeInventoryContainer');
+    if (!store) {
+        container.innerHTML = "";
+        return;
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('ton_quan')
+            .select('*')
+            .eq('store_id', store)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            container.innerHTML = `<p>❌ Chưa có dữ liệu tồn cho quán ${store}.</p>`;
+            return;
+        }
+
+        const inventory = data[0].inventory; // JSONB kiểu { "Đế L":12, "Phô mai S":5, ... }
+
+        let html = `<table>
+            <thead><tr><th>Mặt Hàng</th><th>Số Lượng</th></tr></thead>
+            <tbody>`;
+
+        for (const [item, qty] of Object.entries(inventory)) {
+            html += `<tr><td>${item}</td><td>${qty}</td></tr>`;
+        }
+
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p style="color:red;">Lỗi tải dữ liệu tồn kho.</p>`;
+    }
+}
+
+            // --- Navigation ---
     function showScreen(screen) {
         document.getElementById('mainScreen').style.display = 'none';
-        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen']
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
             .forEach(s => document.getElementById(s).style.display='none');
 
         switch(screen) {
@@ -852,11 +916,13 @@ function login() {
             case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
             case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
             case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
+            case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
         }
     }
 
+
     function backToMenu() {
-        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen']
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
             .forEach(s => document.getElementById(s).style.display='none');
         document.getElementById('mainScreen').style.display='block';
     }      
