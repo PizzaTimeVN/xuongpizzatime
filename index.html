@@ -256,6 +256,24 @@
         .btn-logout:hover {
             background: #c0392b;
         }
+        .category-row:hover {
+    background-color: #e8e8e8;
+}
+
+.product-row td {
+    padding: 6px 8px;
+}
+
+.product-row input {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 2px 4px;
+}
+
+.product-row[style*="red"] input {
+    border-color: red;
+}
+
     </style>
 </head>
 <body>
@@ -410,7 +428,7 @@
         
         // Categories and items
         const categories = {
-             "🍕 Thành phẩm": [
+             "Thành phẩm": [
     'Đế L',
     'Đế S',
     'Phô Mai L',
@@ -442,7 +460,7 @@
     'Bom Phô Mai (viên)'
   ],
 
-  "🥩 Nguyên liệu sống": [
+  "Nguyên liệu sống": [
     'Phô mai cam',
     'Phô mai Topping',
     'Phô Mai Emborg',
@@ -466,7 +484,7 @@
     'Khoai Tây Chiên Nguyên'
   ],
 
-  "🧂 Gia vị & nguyên liệu khô": [
+  "Gia vị & nguyên liệu khô": [
     'Men (bì)',
     'Bột (bao)',
     'Đường (bì)',
@@ -478,7 +496,7 @@
     'Dầu Hào (chai)'
   ],
 
-  "📦 Bao bì & vật dụng": [
+  "Bao bì & vật dụng": [
     'Bao 1 món (kg)',
     'Bao cân bò (kg)',
     'Bao cân mì (kg)',
@@ -491,7 +509,7 @@
     'Bao Đế S (kg)'
   ],
 
-  "🥤 Đồ uống & bánh": [
+  "Đồ uống & bánh": [
     'Coca chai',
     'Coca lon',
     'Nước suối',
@@ -702,10 +720,10 @@ function login() {
 
     function addExportItem() {
         createItemRow('exportItemsContainer', {
-            '🍕 Thành phẩm': categories['🍕 Thành phẩm'],
-            '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
-            '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
-            '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
+            'Thành phẩm': categories['Thành phẩm'],
+            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+            'Đồ uống & bánh': categories['Đồ uống & bánh']
         });
     }
 
@@ -745,15 +763,15 @@ function login() {
         // --- Hàng tiêu đề danh mục ---
         const catRow = tbody.insertRow();
         catRow.classList.add('category-row');
-        catRow.innerHTML = `<td colspan="4" style="font-weight:bold; cursor:pointer;">▶ ${cat}</td>`;
+        catRow.innerHTML = `<td colspan="4" style="font-weight:bold; cursor:pointer; background:#f2f2f2;">▶ ${cat}</td>`;
 
-        // --- Bắt sự kiện click để mở/đóng danh mục ---
+        // --- Sự kiện mở/đóng danh mục ---
         catRow.addEventListener('click', () => {
             catRow.classList.toggle('expanded');
             const expanded = catRow.classList.contains('expanded');
             catRow.querySelector('td').innerHTML = `${expanded ? '▼' : '▶'} ${cat}`;
 
-            // Ẩn/hiện các hàng sản phẩm thuộc danh mục này
+            // Ẩn/hiện các hàng sản phẩm
             categories[cat].forEach(item => {
                 const itemRow = document.getElementById(`row-${item.replace(/\s/g, '-')}`);
                 if (itemRow) itemRow.style.display = expanded ? 'table-row' : 'none';
@@ -763,19 +781,29 @@ function login() {
         // --- Các hàng sản phẩm ---
         categories[cat].forEach(item => {
             const qty = inventoryData[item] || 0;
+            const isLow = qty < 3; // đánh dấu sắp hết
+
             const row = tbody.insertRow();
             row.id = `row-${item.replace(/\s/g, '-')}`;
             row.classList.add('product-row');
-            row.style.display = 'none'; // ẩn mặc định, chỉ hiện khi mở danh mục
+            row.style.display = 'none'; // ẩn mặc định
 
             row.innerHTML = `
-                <td>${cat}</td>
+                <td></td>
                 <td>${item}</td>
-                <td><input type="number" value="${qty}" step="0.1"
-                    onchange="updateInventoryDirect('${item}', this.value)"
-                    style="width:100px" /></td>
-                <td>${qty < 3 ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
+                <td>
+                    <input type="number" value="${qty}" step="0.1"
+                        onchange="updateInventoryDirect('${item}', this.value)"
+                        style="width:100px" />
+                </td>
+                <td>${isLow ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
             `;
+
+            // --- Thêm viền đỏ bo tròn nếu sắp hết ---
+            if (isLow) {
+                row.style.border = '2px solid red';
+                row.style.borderRadius = '8px';
+            }
         });
     }
 }
@@ -863,46 +891,63 @@ function displayAlerts() {
 }
 
 
-    async function loadStoreInventory() {
-    const store = document.getElementById('storeInventorySelect').value;
-    const container = document.getElementById('storeInventoryContainer');
-    if (!store) {
-        container.innerHTML = "";
-        return;
-    }
+            async function loadStoreInventory() {
+            const store = document.getElementById('storeInventorySelect').value;
+            const container = document.getElementById('storeInventoryContainer');
 
-    try {
-        const { data, error } = await supabase
-            .from('ton_quan')
-            .select('*')
-            .eq('store_id', store)
-            .order('created_at', { ascending: false })
-            .limit(1);
+            if (!store) {
+                container.innerHTML = "";
+                return;
+            }
 
-        if (error) throw error;
-        if (!data || data.length === 0) {
-            container.innerHTML = `<p>❌ Chưa có dữ liệu tồn cho quán ${store}.</p>`;
-            return;
+            container.innerHTML = `<p>⏳ Đang tải dữ liệu tồn kho...</p>`;
+
+            try {
+                // 🔹 Ưu tiên sắp theo "date" nếu có, nếu không thì dùng "created_at"
+                const { data, error } = await supabase
+                    .from('ton_quan')
+                    .select('inventory, date, created_at')
+                    .eq('store_id', store)
+                    .order('date', { ascending: false })
+                    .limit(1);
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<p>⚠️ Chưa có dữ liệu tồn kho cho quán <b>${store}</b>.</p>`;
+                    return;
+                }
+
+                const record = data[0];
+                const inventory = record.inventory || {};
+                const dateStr = record.date 
+                    ? new Date(record.date).toLocaleDateString('vi-VN')
+                    : new Date(record.created_at).toLocaleString('vi-VN');
+
+                // 🔹 Render HTML bảng tồn kho
+                let html = `
+                    <h3>📦 Tồn kho quán ${store}</h3>
+                    <p style="color:#777;">Cập nhật gần nhất: ${dateStr}</p>
+                    <table border="1" cellspacing="0" cellpadding="6" style="border-collapse: collapse; width:100%;">
+                        <thead style="background:#f3f3f3;">
+                            <tr><th style="text-align:left;">Mặt hàng</th><th>Số lượng</th></tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                for (const [item, qty] of Object.entries(inventory)) {
+                    const color = qty < 3 ? 'red' : 'black';
+                    html += `<tr><td>${item}</td><td style="color:${color};">${qty}</td></tr>`;
+                }
+
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+
+            } catch (err) {
+                console.error('❌ Lỗi load tồn kho:', err);
+                container.innerHTML = `<p style="color:red;">Lỗi tải dữ liệu tồn kho. Vui lòng thử lại.</p>`;
+            }
         }
 
-        const inventory = data[0].inventory; // JSONB kiểu { "Đế L":12, "Phô mai S":5, ... }
-
-        let html = `<table>
-            <thead><tr><th>Mặt Hàng</th><th>Số Lượng</th></tr></thead>
-            <tbody>`;
-
-        for (const [item, qty] of Object.entries(inventory)) {
-            html += `<tr><td>${item}</td><td>${qty}</td></tr>`;
-        }
-
-        html += `</tbody></table>`;
-        container.innerHTML = html;
-
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `<p style="color:red;">Lỗi tải dữ liệu tồn kho.</p>`;
-    }
-}
 
             // --- Navigation ---
     function showScreen(screen) {
@@ -917,6 +962,7 @@ function displayAlerts() {
             case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
             case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
             case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
+            
         }
     }
 
@@ -925,7 +971,8 @@ function displayAlerts() {
         ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
             .forEach(s => document.getElementById(s).style.display='none');
         document.getElementById('mainScreen').style.display='block';
-    }      
+    }   
+
     </script>
 </body>
 </html>
