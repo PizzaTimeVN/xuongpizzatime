@@ -341,6 +341,7 @@
             <div class="items-container" id="rawItemsContainer"></div>
             <button class="btn add-item-btn" onclick="addRawItem()">+ Thêm Mặt Hàng</button>
             <button class="btn" onclick="saveRawInput()">Lưu</button>
+            <div id="rawAddedList"></div>
         </div>
         
         <!-- Production Input Screen -->
@@ -694,10 +695,10 @@ function login() {
 
     function addRawItem() {
         const rawCategories = {
-            '🥩 Nguyên liệu sống': categories['🥩 Nguyên liệu sống'],
-            '🧂 Gia vị & nguyên liệu khô': categories['🧂 Gia vị & nguyên liệu khô'],
-            '📦 Bao bì & vật dụng': categories['📦 Bao bì & vật dụng'],
-            '🥤 Đồ uống & bánh': categories['🥤 Đồ uống & bánh']
+            'Nguyên liệu sống': categories['Nguyên liệu sống'],
+            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+            'Đồ uống & bánh': categories['Đồ uống & bánh']
         };
         createItemRow('rawItemsContainer', rawCategories);
     }
@@ -709,7 +710,7 @@ function login() {
     }
 
     function addProdItem() {
-        createItemRow('prodItemsContainer', {'🍕 Thành phẩm': categories['🍕 Thành phẩm']});
+        createItemRow('prodItemsContainer', {'Thành phẩm': categories['Thành phẩm']});
     }
 
     function initExportInput() {
@@ -890,7 +891,8 @@ function displayAlerts() {
     }
 }
 
-
+    //load tồn kho quqnas
+    
             async function loadStoreInventory() {
             const store = document.getElementById('storeInventorySelect').value;
             const container = document.getElementById('storeInventoryContainer');
@@ -908,7 +910,7 @@ function displayAlerts() {
                     .from('ton_quan')
                     .select('inventory, date, created_at')
                     .eq('store_id', store)
-                    .order('date', { ascending: false })
+                    .order('created_at', { ascending: false  })
                     .limit(1);
 
                 if (error) throw error;
