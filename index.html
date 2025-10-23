@@ -34,6 +34,12 @@
             font-size: 28px;
         }
         
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
         .login-screen, .main-screen {
             display: none;
         }
@@ -67,6 +73,22 @@
             border-color: #e74c3c;
         }
         
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #e0e0e0;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #27ae60;
+            background-color: #d4f5d4;
+        }
+        
         .btn {
             background: #e74c3c;
             color: white;
@@ -98,6 +120,24 @@
         
         .btn-danger {
             background: #e74c3c;
+        }
+
+        .btn-start {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #2ecc71;
+        }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
         }
         
         .menu-grid {
@@ -158,28 +198,6 @@
             margin-bottom: 20px;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background: #f8f8f8;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        tr:hover {
-            background: #f9f9f9;
-        }
-        
         .search-box {
             margin-bottom: 20px;
         }
@@ -221,59 +239,247 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #e0e0e0; /* nền xám nhạt */
-    transition: border-color 0.3s, background-color 0.3s;
-}
 
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #27ae60; /* xanh lá khi focus */
-            background-color: #d4f5d4; /* nhạt hơn khi focus */
+        /* NEW INVENTORY STYLES */
+        .inventory-container {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
         }
-
-        /* Nút Bắt đầu - xanh lá */
-        .btn-start {
-            background: #27ae60;
+        
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .category-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .category-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #65408d 100%);
+        }
+        
+        .category-header.cat-thanh-pham {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .category-header.cat-nguyen-lieu {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .category-header.cat-gia-vi {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .category-header.cat-bao-bi {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .category-header.cat-do-uong {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-count {
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .category-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .category-icon.expanded {
+            transform: rotate(90deg);
+        }
+        
+        .category-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        
+        .category-body.show {
+            max-height: 2000px;
+        }
+        
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            padding: 20px;
+        }
+        
+        .item-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .item-card:hover {
+            background: #fff;
+            border-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .item-card.low-stock {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .item-quantity {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .item-quantity:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .item-card.low-stock .item-quantity {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-ok {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-low {
+            background: #fff3cd;
+            color: #856404;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-critical {
+            background: #f8d7da;
+            color: #721c24;
+            animation: pulse 1.5s infinite;
+        }
+        .alert-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .btn-start:hover {
-            background: #2ecc71;
-        }
-
-        /* Nút đăng xuất - đỏ */
-        .btn-logout {
+        .alert-table th {
             background: #e74c3c;
             color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
         }
 
-        .btn-logout:hover {
-            background: #c0392b;
+        .alert-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .category-row:hover {
-    background-color: #e8e8e8;
-}
 
-.product-row td {
-    padding: 6px 8px;
-}
+        .alert-table tr:hover {
+            background: #f8f9fa;
+        }
 
-.product-row input {
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 2px 4px;
-}
+        .alert-table input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
 
-.product-row[style*="red"] input {
-    border-color: red;
-}
+        .alert-table input[type="number"] {
+            width: 80px;
+            padding: 6px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
 
+        .order-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-order {
+            background: #27ae60;
+        }
+
+        .btn-order:hover {
+            background: #229954;
+        }
+
+        .btn-order:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
@@ -289,8 +495,8 @@
             <div class="form-group">
                 <label>Tên người nhập</label>
                 <input type="text" id="loginName" placeholder="Nhập tên của bạn" />
-                    </div>
-                    <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label>Mật khẩu</label>
                 <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" />
             </div>
@@ -332,7 +538,6 @@
             </div>
         </div>
 
-        
         <!-- Raw Input Screen -->
         <div id="rawInputScreen" style="display:none;">
             <button class="btn btn-secondary back-btn" onclick="backToMenu()">← Quay Lại</button>
@@ -341,7 +546,6 @@
             <div class="items-container" id="rawItemsContainer"></div>
             <button class="btn add-item-btn" onclick="addRawItem()">+ Thêm Mặt Hàng</button>
             <button class="btn" onclick="saveRawInput()">Lưu</button>
-            <div id="rawAddedList"></div>
         </div>
         
         <!-- Production Input Screen -->
@@ -380,17 +584,7 @@
             <div class="search-box">
                 <input type="text" id="inventorySearch" placeholder="🔍 Tìm kiếm mặt hàng..." onkeyup="searchInventory()" />
             </div>
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>Danh Mục</th>
-                        <th>Mặt Hàng</th>
-                        <th>Số Lượng</th>
-                        <th>Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryBody"></tbody>
-            </table>
+            <div id="inventoryContainer" class="inventory-container"></div>
         </div>
         
         <!-- Alerts Screen -->
@@ -399,9 +593,8 @@
             <h2>Cảnh Báo Hàng Sắp Hết</h2>
             <div id="alertsContainer"></div>
         </div>
-    </div>
 
-            <!-- Store Inventory Screen -->
+        <!-- Store Inventory Screen -->
         <div id="storeInventoryScreen" style="display:none;">
             <button class="btn btn-secondary back-btn" onclick="backToMenu()">← Quay Lại</button>
             <h2>Tồn Kho Các Quán</h2>
@@ -417,201 +610,136 @@
             </div>
             <div id="storeInventoryContainer"></div>
         </div>
-
-
-   
+    </div>
 
     <script>
-        // Supabase configuration - REPLACE WITH YOUR CREDENTIALS
+        // Supabase configuration
         const SUPABASE_URL = 'https://tyuufjwutazjfuiawiul.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5dXVmand1dGF6amZ1aWF3aXVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDk4OTIsImV4cCI6MjA3NjA4NTg5Mn0.8WEsb2tBD6akNA9h9tR9zIAqjkZz0xZYVNbYCx2dEbc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Discord Webhook URL - THAY ĐỔI URL NÀY BẰNG WEBHOOK CỦA BẠN
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1387472354149400748/t4uIPrQMAPg1MuUDOm8DW3r-2dDXQMQhdVxJ8QrUPX9igBBwyOOrsxVIdRQDzclI5smh';
+        
+        let inventoryData = {};
         
         // Categories and items
         const categories = {
-             "Thành phẩm": [
-    'Đế L',
-    'Đế S',
-    'Phô Mai L',
-    'Phô Mai S',
-    'Bò pizza (bịch)',
-    'Bò mì Ý (bịch)',
-    'Gà pizza (bịch)',
-    'Tôm (bịch)',
-    'Mực (bịch)',
-    'Cá Ngừ (bịch)',
-    'XXH (bịch)',
-    'XXĐ (bịch)',
-    'Ba Rọi (bịch)',
-    'Bò sốt cay (bịch)',
-    'Sốt sữa (bịch)',
-    'Sốt cà (hũ)',
-    'Sốt Gà',
-    'Salami (bịch)',
-    'Đùi Gà (cái)',
-    'Đá Me (bịch)',
-    'Gà Lắc (bịch)',
-    'XX Chiên Xù',
-    'Mứt đào (bịch)',
-    'KTC (bịch)',
-    'Tok (bịch)',
-    'Miếng đào (bịch)',
-    'Nấm (bịch)',
-    'Bông Cải Xanh (bịch)',
-    'Bom Phô Mai (viên)'
-  ],
-
-  "Nguyên liệu sống": [
-    'Phô mai cam',
-    'Phô mai Topping',
-    'Phô Mai Emborg',
-    'Phô mai trắng',
-    'Phô mai vàng',
-    'Phô mai tươi',
-    'Bò nguyên',
-    'Gà ức',
-    'Đùi Gà',
-    'Bò Miếng Sống',
-    'Tôm sống (phần)',
-    'Mực sống (phần)',
-    'Thanh Cua Nguyên',
-    'Ba Rọi Nguyên',
-    'Mì Ý Nguyên',
-    'Bắp (Kg)',
-    'Cà chua',
-    'Cà rốt',
-    'Hành Tây',
-    'Khoai Tây (Củ)',
-    'Khoai Tây Chiên Nguyên'
-  ],
-
-  "Gia vị & nguyên liệu khô": [
-    'Men (bì)',
-    'Bột (bao)',
-    'Đường (bì)',
-    'Muối (bì)',
-    'Xì dầu (chai)',
-    'Rượu (chai)',
-    'Tiêu',
-    'Dầu ăn (can)',
-    'Dầu Hào (chai)'
-  ],
-
-  "Bao bì & vật dụng": [
-    'Bao 1 món (kg)',
-    'Bao cân bò (kg)',
-    'Bao cân mì (kg)',
-    'Bì vàng (kg)',
-    'Bao Pizza Lớn (kg)',
-    'Bao rác (kg)',
-    'Dây thun (bịch)',
-    'Ly nhựa (lốc)',
-    'Bao Đế L (kg)',
-    'Bao Đế S (kg)'
-  ],
-
-  "Đồ uống & bánh": [
-    'Coca chai',
-    'Coca lon',
-    'Nước suối',
-    'Bia Blance',
-    'Bia Quy Nhơn',
-    'Bánh mì'
-  ]
+            "Thành phẩm": [
+                'Đế L', 'Đế S', 'Phô Mai L', 'Phô Mai S', 'Bò pizza (bịch)', 'Bò mì Ý (bịch)',
+                'Gà pizza (bịch)', 'Tôm (bịch)', 'Mực (bịch)', 'Cá Ngừ (bịch)', 'XXH (bịch)',
+                'XXĐ (bịch)', 'Ba Rọi (bịch)', 'Bò sốt cay (bịch)', 'Sốt sữa (bịch)', 'Sốt cà (hũ)',
+                'Sốt Gà', 'Salami (bịch)', 'Đùi Gà (cái)', 'Đá Me (bịch)', 'Gà Lắc (bịch)',
+                'XX Chiên Xù', 'Mứt đào (bịch)', 'KTC (bịch)', 'Tok (bịch)', 'Miếng đào (bịch)',
+                'Nấm (bịch)', 'Bông Cải Xanh (bịch)', 'Bom Phô Mai (viên)'
+            ],
+            "Nguyên liệu sống": [
+                'Phô mai cam', 'Phô mai Topping', 'Phô Mai Emborg', 'Phô mai trắng', 'Phô mai vàng',
+                'Phô mai tươi', 'Bò nguyên', 'Gà ức', 'Đùi Gà', 'Bò Miếng Sống', 'Tôm sống (phần)',
+                'Mực sống (phần)', 'Thanh Cua Nguyên', 'Ba Rọi Nguyên', 'Mì Ý Nguyên', 'Bắp (Kg)',
+                'Cà chua', 'Cà rốt', 'Hành Tây', 'Khoai Tây (Củ)', 'Khoai Tây Chiên Nguyên'
+            ],
+            "Gia vị & nguyên liệu khô": [
+                'Men (bì)', 'Bột (bao)', 'Đường (bì)', 'Muối (bì)', 'Xì dầu (chai)', 'Rượu (chai)',
+                'Tiêu', 'Dầu ăn (can)', 'Dầu Hào (chai)'
+            ],
+            "Bao bì & vật dụng": [
+                'Bao 1 món (kg)', 'Bao cân bò (kg)', 'Bao cân mì (kg)', 'Bì vàng (kg)', 'Bao Pizza Lớn (kg)',
+                'Bao rác (kg)', 'Dây thun (bịch)', 'Ly nhựa (lốc)', 'Bao Đế L (kg)', 'Bao Đế S (kg)'
+            ],
+            "Đồ uống & bánh": [
+                'Coca chai', 'Coca lon', 'Nước suối', 'Bia Blance', 'Bia Quy Nhơn', 'Bánh mì'
+            ]
         };
-        
         
         // Set default date to today
         document.getElementById('loginDate').valueAsDate = new Date();
         
         const users = {
-    "Bo": "123",
-    "Nhu2k6": "Xinh@Dep",
-    "Ngan2k2": "Dep$Gioi",
-    "admin": "123"
-};
+            "Bo": "123",
+            "Nhu2k6": "Xinh@Dep",
+            "Ngan2k2": "Dep$Gioi",
+            "admin": "123"
+        };
 
-let currentDate = '';
-let currentUser = '';
+        let currentDate = '';
+        let currentUser = '';
 
-function login() {
-        const date = document.getElementById('loginDate').value;
-        const name = document.getElementById('loginName').value.trim();
-        const password = document.getElementById('loginPassword').value;
+        function login() {
+            const date = document.getElementById('loginDate').value;
+            const name = document.getElementById('loginName').value.trim();
+            const password = document.getElementById('loginPassword').value;
 
-        if (!date || !name || !password) {
-            alert('Vui lòng nhập đầy đủ thông tin!');
-            return;
+            if (!date || !name || !password) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+
+            if (!(name in users) || users[name] !== password) {
+                alert('Tên người dùng hoặc mật khẩu không đúng!');
+                return;
+            }
+
+            currentDate = date;
+            currentUser = name;
+
+            localStorage.setItem('currentDate', currentDate);
+            localStorage.setItem('currentUser', currentUser);
+
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('mainScreen').classList.add('active');
+
+            document.getElementById('currentDate').textContent = currentDate;
+            document.getElementById('currentUser').textContent = currentUser;
+
+            loadInventory();
         }
 
-        if (!(name in users) || users[name] !== password) {
-            alert('Tên người dùng hoặc mật khẩu không đúng!');
-            return;
+        function logout() {
+            currentDate = '';
+            currentUser = '';
+            localStorage.removeItem('currentDate');
+            localStorage.removeItem('currentUser');
+
+            document.getElementById('mainScreen').classList.remove('active');
+            document.getElementById('loginScreen').classList.add('active');
+
+            document.getElementById('loginDate').value = '';
+            document.getElementById('loginName').value = '';
+            document.getElementById('loginPassword').value = '';
         }
 
-        currentDate = date;
-        currentUser = name;
+        // Load Inventory
+        async function loadInventory() {
+            const { data, error } = await supabase
+                .from('inventory')
+                .select('*');
 
-        localStorage.setItem('currentDate', currentDate);
-        localStorage.setItem('currentUser', currentUser);
+            if (error) {
+                console.error('Lỗi load inventory:', error);
+                return;
+            }
 
-        document.getElementById('loginScreen').classList.remove('active');
-        document.getElementById('mainScreen').classList.add('active');
+            inventoryData = {};
+            data.forEach(row => {
+                inventoryData[row.item] = row.quantity;
+            });
 
-        document.getElementById('currentDate').textContent = currentDate;
-        document.getElementById('currentUser').textContent = currentUser;
-
-        loadInventory();
-    }
-
-    function logout() {
-        currentDate = '';
-        currentUser = '';
-        localStorage.removeItem('currentDate');
-        localStorage.removeItem('currentUser');
-
-        document.getElementById('mainScreen').classList.remove('active');
-        document.getElementById('loginScreen').classList.add('active');
-
-        document.getElementById('loginDate').value = '';
-        document.getElementById('loginName').value = '';
-        document.getElementById('loginPassword').value = '';
-    }
-
-    // --- Load Inventory ---
-    async function loadInventory() {
-        const { data, error } = await supabase
-            .from('inventory')
-            .select('*');
-
-        if (error) {
-            console.error('Lỗi load inventory:', error);
-            return;
+            displayInventory();
+            displayAlerts();
         }
 
-        inventoryData = {};
-        data.forEach(row => {
-            inventoryData[row.item] = row.quantity;
-        });
-
-        displayInventory();
-        displayAlerts();
-    }
-
-    // --- Update Inventory và log ---
+        // Update Inventory
         async function updateInventory(itemName, quantityChange, type = 'manual', store = null) {
             const currentQty = inventoryData[itemName] || 0;
             const newQty = currentQty + quantityChange;
             inventoryData[itemName] = newQty;
 
-            // Cập nhật Supabase inventory
             const { error: invError } = await supabase
                 .from('inventory')
                 .upsert({ item: itemName, quantity: newQty }, { onConflict: 'item' });
 
             if (invError) console.error('❌ Lỗi ghi inventory:', invError);
 
-            // Ghi log theo loại giao dịch
             const today = new Date().toISOString().slice(0, 10);
 
             if (type === 'raw_input') {
@@ -643,257 +771,322 @@ function login() {
                 if (error) console.error('❌ Lỗi ghi exports:', error);
             }
 
-
-        displayInventory();
-        displayAlerts();
-    }
-
-    // --- Item Row UI ---
-    function createItemRow(containerId, categoryList) {
-        const container = document.getElementById(containerId);
-        const row = document.createElement('div');
-        row.className = 'item-row';
-
-        let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
-        for (let cat in categoryList) {
-            optionsHTML += `<optgroup label="${cat}">`;
-            categoryList[cat].forEach(item => {
-                optionsHTML += `<option value="${item}">${item}</option>`;
-            });
-            optionsHTML += '</optgroup>';
+            displayInventory();
+            displayAlerts();
         }
 
-        row.innerHTML = `
-            <select class="item-select">${optionsHTML}</select>
-            <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
-            <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
-        `;
+        // Item Row UI
+        function createItemRow(containerId, categoryList) {
+            const container = document.getElementById(containerId);
+            const row = document.createElement('div');
+            row.className = 'item-row';
 
-        container.appendChild(row);
-    }
-
-    function getItemsFromContainer(containerId) {
-        const container = document.getElementById(containerId);
-        const rows = container.querySelectorAll('.item-row');
-        const items = [];
-
-        rows.forEach(row => {
-            const name = row.querySelector('.item-select').value;
-            const quantity = parseFloat(row.querySelector('.item-quantity').value);
-            if (name && quantity > 0) items.push({ name, quantity });
-        });
-
-        return items;
-    }
-
-    // --- Init các màn hình ---
-    function initRawInput() {
-        document.getElementById('rawItemsContainer').innerHTML = '';
-        document.getElementById('rawSuccessMsg').innerHTML = '';
-        addRawItem();
-    }
-
-    function addRawItem() {
-        const rawCategories = {
-            'Nguyên liệu sống': categories['Nguyên liệu sống'],
-            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
-            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
-            'Đồ uống & bánh': categories['Đồ uống & bánh']
-        };
-        createItemRow('rawItemsContainer', rawCategories);
-    }
-
-    function initProdInput() {
-        document.getElementById('prodItemsContainer').innerHTML = '';
-        document.getElementById('prodSuccessMsg').innerHTML = '';
-        addProdItem();
-    }
-
-    function addProdItem() {
-        createItemRow('prodItemsContainer', {'Thành phẩm': categories['Thành phẩm']});
-    }
-
-    function initExportInput() {
-        document.getElementById('exportItemsContainer').innerHTML = '';
-        document.getElementById('exportSuccessMsg').innerHTML = '';
-        addExportItem();
-    }
-
-    function addExportItem() {
-        createItemRow('exportItemsContainer', {
-            'Thành phẩm': categories['Thành phẩm'],
-            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
-            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
-            'Đồ uống & bánh': categories['Đồ uống & bánh']
-        });
-    }
-
-    // --- Save functions ---
-    async function saveRawInput() {
-        const items = getItemsFromContainer('rawItemsContainer');
-        if (!items.length) return;
-        for (let item of items) await updateInventory(item.name, item.quantity, 'raw_input');
-        document.getElementById('rawSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
-        setTimeout(() => initRawInput(), 2000);
-    }
-
-    async function saveProduction() {
-        const items = getItemsFromContainer('prodItemsContainer');
-        if (!items.length) return;
-        for (let item of items) await updateInventory(item.name, item.quantity, 'production');
-        document.getElementById('prodSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
-        setTimeout(() => initProdInput(), 2000);
-    }
-
-    async function saveExport() {
-        const store = document.getElementById('storeSelect').value;
-        const items = getItemsFromContainer('exportItemsContainer');
-        if (!items.length) return;
-        for (let item of items) await updateInventory(item.name, -item.quantity, 'export', store);
-        document.getElementById('exportSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã xuất hàng thành công!</div>';
-        setTimeout(() => initExportInput(), 2000);
-    }
-
-    // --- Display Inventory & Alerts ---
-    function displayInventory() {
-    const tbody = document.getElementById('inventoryBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    for (let cat in categories) {
-        // --- Hàng tiêu đề danh mục ---
-        const catRow = tbody.insertRow();
-        catRow.classList.add('category-row');
-        catRow.innerHTML = `<td colspan="4" style="font-weight:bold; cursor:pointer; background:#f2f2f2;">▶ ${cat}</td>`;
-
-        // --- Sự kiện mở/đóng danh mục ---
-        catRow.addEventListener('click', () => {
-            catRow.classList.toggle('expanded');
-            const expanded = catRow.classList.contains('expanded');
-            catRow.querySelector('td').innerHTML = `${expanded ? '▼' : '▶'} ${cat}`;
-
-            // Ẩn/hiện các hàng sản phẩm
-            categories[cat].forEach(item => {
-                const itemRow = document.getElementById(`row-${item.replace(/\s/g, '-')}`);
-                if (itemRow) itemRow.style.display = expanded ? 'table-row' : 'none';
-            });
-        });
-
-        // --- Các hàng sản phẩm ---
-        categories[cat].forEach(item => {
-            const qty = inventoryData[item] || 0;
-            const isLow = qty < 3; // đánh dấu sắp hết
-
-            const row = tbody.insertRow();
-            row.id = `row-${item.replace(/\s/g, '-')}`;
-            row.classList.add('product-row');
-            row.style.display = 'none'; // ẩn mặc định
+            let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
+            for (let cat in categoryList) {
+                optionsHTML += `<optgroup label="${cat}">`;
+                categoryList[cat].forEach(item => {
+                    optionsHTML += `<option value="${item}">${item}</option>`;
+                });
+                optionsHTML += '</optgroup>';
+            }
 
             row.innerHTML = `
-                <td></td>
-                <td>${item}</td>
-                <td>
-                    <input type="number" value="${qty}" step="0.1"
-                        onchange="updateInventoryDirect('${item}', this.value)"
-                        style="width:100px" />
-                </td>
-                <td>${isLow ? '⚠️ Sắp hết' : '✓ Đủ'}</td>
+                <select class="item-select">${optionsHTML}</select>
+                <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
+                <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
             `;
 
-            // --- Thêm viền đỏ bo tròn nếu sắp hết ---
-            if (isLow) {
-                row.style.border = '2px solid red';
-                row.style.borderRadius = '8px';
+            container.appendChild(row);
+        }
+
+        function getItemsFromContainer(containerId) {
+            const container = document.getElementById(containerId);
+            const rows = container.querySelectorAll('.item-row');
+            const items = [];
+
+            rows.forEach(row => {
+                const name = row.querySelector('.item-select').value;
+                const quantity = parseFloat(row.querySelector('.item-quantity').value);
+                if (name && quantity > 0) items.push({ name, quantity });
+            });
+
+            return items;
+        }
+
+        // Init screens
+        function initRawInput() {
+            document.getElementById('rawItemsContainer').innerHTML = '';
+            document.getElementById('rawSuccessMsg').innerHTML = '';
+            addRawItem();
+        }
+
+        function addRawItem() {
+            const rawCategories = {
+                'Nguyên liệu sống': categories['Nguyên liệu sống'],
+                'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+                'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+                'Đồ uống & bánh': categories['Đồ uống & bánh']
+            };
+            createItemRow('rawItemsContainer', rawCategories);
+        }
+
+        function initProdInput() {
+            document.getElementById('prodItemsContainer').innerHTML = '';
+            document.getElementById('prodSuccessMsg').innerHTML = '';
+            addProdItem();
+        }
+
+        function addProdItem() {
+            createItemRow('prodItemsContainer', {'Thành phẩm': categories['Thành phẩm']});
+        }
+
+        function initExportInput() {
+            document.getElementById('exportItemsContainer').innerHTML = '';
+            document.getElementById('exportSuccessMsg').innerHTML = '';
+            addExportItem();
+        }
+
+        function addExportItem() {
+            createItemRow('exportItemsContainer', {
+                'Thành phẩm': categories['Thành phẩm'],
+                'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+                'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+                'Đồ uống & bánh': categories['Đồ uống & bánh']
+            });
+        }
+
+        // Save functions
+        async function saveRawInput() {
+            const items = getItemsFromContainer('rawItemsContainer');
+            if (!items.length) return;
+            for (let item of items) await updateInventory(item.name, item.quantity, 'raw_input');
+            document.getElementById('rawSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
+            setTimeout(() => initRawInput(), 2000);
+        }
+
+        async function saveProduction() {
+            const items = getItemsFromContainer('prodItemsContainer');
+            if (!items.length) return;
+            for (let item of items) await updateInventory(item.name, item.quantity, 'production');
+            document.getElementById('prodSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
+            setTimeout(() => initProdInput(), 2000);
+        }
+
+        async function saveExport() {
+            const store = document.getElementById('storeSelect').value;
+            const items = getItemsFromContainer('exportItemsContainer');
+            if (!items.length) return;
+            for (let item of items) await updateInventory(item.name, -item.quantity, 'export', store);
+            document.getElementById('exportSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã xuất hàng thành công!</div>';
+            setTimeout(() => initExportInput(), 2000);
+        }
+
+        // Display Inventory - NEW CARD LAYOUT
+        function displayInventory() {
+            const container = document.getElementById('inventoryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const categoryClasses = {
+                'Thành phẩm': 'cat-thanh-pham',
+                'Nguyên liệu sống': 'cat-nguyen-lieu',
+                'Gia vị & nguyên liệu khô': 'cat-gia-vi',
+                'Bao bì & vật dụng': 'cat-bao-bi',
+                'Đồ uống & bánh': 'cat-do-uong'
+            };
+
+            const categoryIcons = {
+                'Thành phẩm': '🍕',
+                'Nguyên liệu sống': '🥩',
+                'Gia vị & nguyên liệu khô': '🧂',
+                'Bao bì & vật dụng': '📦',
+                'Đồ uống & bánh': '🥤'
+            };
+
+            for (let cat in categories) {
+                const items = categories[cat];
+                const lowStockCount = items.filter(item => (inventoryData[item] || 0) < 3).length;
+                
+                // Category Card
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.dataset.category = cat;
+
+                // Header
+                const header = document.createElement('div');
+                header.className = `category-header ${categoryClasses[cat] || ''}`;
+                header.innerHTML = `
+                    <div class="category-title">
+                        <span class="category-icon">▶</span>
+                        <span>${categoryIcons[cat] || '📋'} ${cat}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        ${lowStockCount > 0 ? `<span class="status-badge status-critical">⚠️ ${lowStockCount} sắp hết</span>` : ''}
+                        <span class="category-count">${items.length} sản phẩm</span>
+                    </div>
+                `;
+
+                // Body
+                const body = document.createElement('div');
+                body.className = 'category-body';
+
+                const grid = document.createElement('div');
+                grid.className = 'item-grid';
+
+                items.forEach(item => {
+                    const qty = inventoryData[item] || 0;
+                    let statusClass = '';
+                    let statusBadge = '';
+
+                    if (qty === 0) {
+                        statusClass = 'low-stock';
+                        statusBadge = '<span class="status-badge status-critical">❌ Hết hàng</span>';
+                    } else if (qty < 3) {
+                        statusClass = 'low-stock';
+                        statusBadge = '<span class="status-badge status-low">⚠️ Sắp hết</span>';
+                    } else {
+                        statusBadge = '<span class="status-badge status-ok">✓ Đủ hàng</span>';
+                    }
+
+                    const itemCard = document.createElement('div');
+                    itemCard.className = `item-card ${statusClass}`;
+                    itemCard.dataset.itemName = item;
+                    itemCard.innerHTML = `
+                        <div class="item-name">${item}</div>
+                        <div class="item-controls">
+                            <input type="number" class="item-quantity" value="${qty}" step="0.1" min="0"
+                                onchange="updateInventoryDirect('${item}', this.value)" />
+                            ${statusBadge}
+                        </div>
+                    `;
+
+                    grid.appendChild(itemCard);
+                });
+
+                body.appendChild(grid);
+                card.appendChild(header);
+                card.appendChild(body);
+                container.appendChild(card);
+
+                // Toggle functionality
+                header.addEventListener('click', () => {
+                    const icon = header.querySelector('.category-icon');
+                    const isExpanded = body.classList.contains('show');
+                    
+                    if (isExpanded) {
+                        body.classList.remove('show');
+                        icon.classList.remove('expanded');
+                    } else {
+                        body.classList.add('show');
+                        icon.classList.add('expanded');
+                    }
+                });
             }
-        });
-    }
-}
-
-
-    function searchInventory() {
-    const keyword = document
-        .getElementById('inventorySearch')
-        .value.trim()
-        .toLowerCase();
-
-    // Ẩn hoặc hiện từng hàng sản phẩm theo từ khóa
-    const rows = document.querySelectorAll('#inventoryBody tr.product-row');
-    let matchCount = 0;
-
-    rows.forEach(row => {
-        const name = row
-            .querySelector('td:nth-child(2)')
-            .textContent.toLowerCase();
-
-        if (name.includes(keyword)) {
-            row.style.display = 'table-row';
-            matchCount++;
-        } else {
-            row.style.display = 'none';
         }
-    });
 
-    // Nếu đang tìm kiếm, mở rộng tất cả danh mục để dễ thấy
-    const catRows = document.querySelectorAll('#inventoryBody tr.category-row');
-    catRows.forEach(row => {
-        const isSearching = keyword.length > 0;
-        const expanded = row.classList.contains('expanded');
+        function searchInventory() {
+            const keyword = document.getElementById('inventorySearch').value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.category-card');
 
-        if (isSearching && !expanded) {
-            row.classList.add('expanded');
-            row.querySelector('td').innerHTML = `▼ ${row.textContent.slice(2)}`;
-        } else if (!isSearching && expanded) {
-            row.classList.remove('expanded');
-            row.querySelector('td').innerHTML = `▶ ${row.textContent.slice(2)}`;
+            cards.forEach(card => {
+                const items = card.querySelectorAll('.item-card');
+                let visibleCount = 0;
+
+                items.forEach(itemCard => {
+                    const name = itemCard.dataset.itemName.toLowerCase();
+                    if (name.includes(keyword)) {
+                        itemCard.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        itemCard.style.display = 'none';
+                    }
+                });
+
+                // Auto expand if search has results
+                const body = card.querySelector('.category-body');
+                const icon = card.querySelector('.category-icon');
+                
+                if (keyword && visibleCount > 0) {
+                    body.classList.add('show');
+                    icon.classList.add('expanded');
+                    card.style.display = 'block';
+                } else if (keyword && visibleCount === 0) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
         }
-    });
 
-    // Nếu không tìm thấy kết quả
-    const inventoryBody = document.getElementById('inventoryBody');
-    const noResultRow = document.getElementById('noResultRow');
-    if (noResultRow) noResultRow.remove();
+        function updateInventoryDirect(itemName, newValue) {
+            const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
+            updateInventory(itemName, diff, 'manual');
+        }
 
-    if (keyword && matchCount === 0) {
-        const noRow = document.createElement('tr');
-        noRow.id = 'noResultRow';
-        noRow.innerHTML = `<td colspan="4" style="text-align:center; color:#999;">Không tìm thấy mặt hàng nào</td>`;
-        inventoryBody.appendChild(noRow);
-    }
-}
+        function displayAlerts() {
+            const container = document.getElementById('alertsContainer');
+            container.innerHTML = '';
+            let lowStockItems = [];
 
+            for (const [groupName, items] of Object.entries(categories)) {
+                items.forEach(item => {
+                    const qty = parseFloat(inventoryData[item] || 0);
+                    if (qty < 3) lowStockItems.push({ name: item, quantity: qty });
+                });
+            }
 
-    function updateInventoryDirect(itemName, newValue) {
-        const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
-        updateInventory(itemName, diff, 'manual');
-    }
-
-function displayAlerts() {
-    const container = document.getElementById('alertsContainer');
-    container.innerHTML = '';
-    let lowStockItems = [];
-
-    for (const [groupName, items] of Object.entries(categories)) {
-        items.forEach(item => {
-            const qty = parseFloat(inventoryData[item] || 0);
-            if (qty < 3) lowStockItems.push({ name: item, quantity: qty });
-        });
-    }
-
-    if (!lowStockItems.length) {
-        container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
-    } else {
-        let html = '<div class="alert">';
-        lowStockItems.forEach(item => {
-            html += `<div class="alert-item">⚠️ <strong>${item.name}</strong>: ${item.quantity}</div>`;
-        });
-        html += '</div>';
-        container.innerHTML = html;
-    }
-}
-
-    //load tồn kho quqnas
-    
-            async function loadStoreInventory() {
+            if (!lowStockItems.length) {
+                container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
+            } else {
+                let html = `
+                    <div class="alert">
+                        <p style="margin-bottom:15px;"><strong>⚠️ Có ${lowStockItems.length} mặt hàng sắp hết hoặc đã hết!</strong></p>
+                        <table class="alert-table">
+                            <thead>
+                                <tr>
+                                    <th width="50">
+                                        <input type="checkbox" id="selectAll" onchange="toggleAllOrders(this.checked)" />
+                                    </th>
+                                    <th>Mặt hàng</th>
+                                    <th width="100">Tồn kho</th>
+                                    <th width="120">Số lượng đặt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                lowStockItems.forEach((item, index) => {
+                    const suggestedQty = item.quantity === 0 ? 10 : 5;
+                    html += `
+                        <tr>
+                            <td style="text-align:center;">
+                                <input type="checkbox" class="order-checkbox" data-item="${item.name}" data-index="${index}" />
+                            </td>
+                            <td><strong>${item.name}</strong></td>
+                            <td style="color: ${item.quantity === 0 ? 'red' : 'orange'}; font-weight: bold; text-align: center;">
+                                ${item.quantity}
+                            </td>
+                            <td>
+                                <input type="number" class="order-quantity" data-item="${item.name}" 
+                                    value="${suggestedQty}" min="1" step="1" />
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                        <div class="order-actions">
+                            <button class="btn btn-secondary" onclick="clearAllOrders()">Bỏ chọn tất cả</button>
+                            <button class="btn btn-order" onclick="sendOrderToDiscord()">📤 Gửi đơn đặt hàng</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = html;
+            }
+        }
+        async function loadStoreInventory() {
             const store = document.getElementById('storeInventorySelect').value;
             const container = document.getElementById('storeInventoryContainer');
 
@@ -905,12 +1098,11 @@ function displayAlerts() {
             container.innerHTML = `<p>⏳ Đang tải dữ liệu tồn kho...</p>`;
 
             try {
-                // 🔹 Ưu tiên sắp theo "date" nếu có, nếu không thì dùng "created_at"
                 const { data, error } = await supabase
                     .from('ton_quan')
                     .select('inventory, date, created_at')
                     .eq('store_id', store)
-                    .order('created_at', { ascending: false  })
+                    .order('created_at', { ascending: false })
                     .limit(1);
 
                 if (error) throw error;
@@ -925,7 +1117,6 @@ function displayAlerts() {
                     ? new Date(record.date).toLocaleDateString('vi-VN')
                     : new Date(record.created_at).toLocaleString('vi-VN');
 
-                // 🔹 Render HTML bảng tồn kho
                 let html = `
                     <h3>📦 Tồn kho quán ${store}</h3>
                     <p style="color:#777;">Cập nhật gần nhất: ${dateStr}</p>
@@ -950,31 +1141,126 @@ function displayAlerts() {
             }
         }
 
+        // Navigation
+        function showScreen(screen) {
+            document.getElementById('mainScreen').style.display = 'none';
+            ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
+                .forEach(s => document.getElementById(s).style.display='none');
 
-            // --- Navigation ---
-    function showScreen(screen) {
-        document.getElementById('mainScreen').style.display = 'none';
-        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
-            .forEach(s => document.getElementById(s).style.display='none');
-
-        switch(screen) {
-            case 'rawInput': document.getElementById('rawInputScreen').style.display='block'; initRawInput(); break;
-            case 'productionInput': document.getElementById('productionInputScreen').style.display='block'; initProdInput(); break;
-            case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
-            case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
-            case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
-            case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
-            
+            switch(screen) {
+                case 'rawInput': document.getElementById('rawInputScreen').style.display='block'; initRawInput(); break;
+                case 'productionInput': document.getElementById('productionInputScreen').style.display='block'; initProdInput(); break;
+                case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
+                case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
+                case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
+                case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
+            }
         }
-    }
 
+        function backToMenu() {
+            ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
+                .forEach(s => document.getElementById(s).style.display='none');
+            document.getElementById('mainScreen').style.display='block';
+        }
 
-    function backToMenu() {
-        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
-            .forEach(s => document.getElementById(s).style.display='none');
-        document.getElementById('mainScreen').style.display='block';
-    }   
+        function toggleAllOrders(checked) {
+                const checkboxes = document.querySelectorAll('.order-checkbox');
+                checkboxes.forEach(cb => cb.checked = checked);
+            }
 
+            function clearAllOrders() {
+                document.getElementById('selectAll').checked = false;
+                toggleAllOrders(false);
+            }
+
+            async function sendOrderToDiscord() {
+                const checkboxes = document.querySelectorAll('.order-checkbox:checked');
+                
+                if (checkboxes.length === 0) {
+                    alert('⚠️ Vui lòng chọn ít nhất một mặt hàng để đặt!');
+                    return;
+                }
+
+                const orders = [];
+                checkboxes.forEach(cb => {
+                    const itemName = cb.dataset.item;
+                    const qtyInput = document.querySelector(`.order-quantity[data-item="${itemName}"]`);
+                    const quantity = parseInt(qtyInput.value) || 0;
+                    
+                    if (quantity > 0) {
+                        const currentStock = inventoryData[itemName] || 0;
+                        orders.push({
+                            name: itemName,
+                            currentStock: currentStock,
+                            orderQty: quantity
+                        });
+                    }
+                });
+
+                if (orders.length === 0) {
+                    alert('⚠️ Không có mặt hàng nào có số lượng hợp lệ!');
+                    return;
+                }
+
+                // Tạo nội dung đơn đặt hàng
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('vi-VN');
+                const timeStr = now.toLocaleTimeString('vi-VN');
+                
+                let orderMessage = `🍕 **ĐƠN ĐẶT HÀNG - PIZZA TIME**\n\n`;
+                orderMessage += `📅 **Ngày:** ${dateStr} - ${timeStr}\n`;
+                orderMessage += `👤 **Người đặt:** ${currentUser}\n`;
+                orderMessage += `📦 **Số mặt hàng:** ${orders.length}\n\n`;
+                orderMessage += `**CHI TIẾT ĐƠN HÀNG:**\n`;
+                orderMessage += `${'='.repeat(50)}\n`;
+                
+                orders.forEach((order, idx) => {
+                    orderMessage += `${idx + 1}. **${order.name}**\n`;
+                    orderMessage += `   └ Tồn kho hiện tại: ${order.currentStock}\n`;
+                    orderMessage += `   └ Số lượng đặt: **${order.orderQty}**\n\n`;
+                });
+                
+                orderMessage += `${'='.repeat(50)}\n`;
+                orderMessage += `⚠️ *Vui lòng xác nhận và xử lý đơn hàng này!*`;
+
+                // Gửi đến Discord
+                try {
+                    const response = await fetch(DISCORD_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            content: orderMessage,
+                            username: 'Pizza Time Bot',
+                            avatar_url: 'https://em-content.zobj.net/thumbs/120/apple/354/pizza_1f355.png'
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('✅ Đã gửi đơn đặt hàng thành công!');
+                        
+                        // Lưu đơn hàng vào Supabase (optional)
+                        const orderData = {
+                            date: now.toISOString().slice(0, 10),
+                            time: timeStr,
+                            user_name: currentUser,
+                            items: orders,
+                            total_items: orders.length
+                        };
+                        
+                        await supabase.from('orders').insert([orderData]);
+                        
+                        // Reset form
+                        clearAllOrders();
+                    } else {
+                        throw new Error('Discord webhook response not OK');
+                    }
+                } catch (error) {
+                    console.error('❌ Lỗi gửi đơn hàng:', error);
+                    alert('❌ Không thể gửi đơn hàng. Vui lòng kiểm tra lại Discord Webhook URL!');
+                }
+            }
     </script>
 </body>
 </html>
