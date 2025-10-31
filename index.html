@@ -615,6 +615,7 @@
                         <option value="NH">NH</option>
                         <option value="HXH">HXH</option>
                         <option value="PY">PY</option>
+                        <option value="Xuong">Xuong</option>
                     </select>
                 </div>
                 
@@ -685,16 +686,17 @@
             "Nguyên liệu sống": [
                 'Phô mai cam', 'Phô mai Topping', 'Phô Mai Emborg', 'Phô mai trắng', 'Phô mai vàng',
                 'Phô mai tươi', 'Bò nguyên', 'Gà ức', 'Đùi Gà', 'Bò Miếng Sống', 'Tôm sống (phần)',
-                'Mực sống (phần)', 'Thanh Cua Nguyên', 'Ba Rọi Nguyên', 'Mì Ý Nguyên', 'Bắp (Kg)',
-                'Cà chua', 'Cà rốt', 'Hành Tây', 'Khoai Tây (Củ)', 'Khoai Tây Chiên Nguyên'
+                'Mực sống (phần)', 'Thanh Cua Nguyên', 'Ba Rọi Nguyên', 'Xúc xích Đức Nguyên', 'Xúc xích heo nguyên',
+                'Cà chua', 'Cà rốt', 'Hành Tây', 'Khoai Tây (Củ)', 'Khoai Tây Chiên Nguyên', 'Cá ngừ hũ L', 'Cá ngừ hũ S'
             ],
             "Gia vị & nguyên liệu khô": [
                 'Men (bì)', 'Bột (bao)', 'Đường (bì)', 'Muối (bì)', 'Xì dầu (chai)', 'Rượu (chai)',
-                'Tiêu', 'Dầu ăn (can)', 'Dầu Hào (chai)'
+                'Tiêu', 'Dầu ăn (can)', 'Dầu Hào (chai)','Mì Ý Nguyên', 'Bắp (Kg)', 'Mayo nhỏ', 'Mayo lớn', 'Bơ', 
+                'Cà chua paste', 'Bột chiên gà (bịch)', 'Bột phô mai lắc gà'
             ],
             "Bao bì & vật dụng": [
                 'Bao 1 món (kg)', 'Bao cân bò (kg)', 'Bao cân mì (kg)', 'Bì vàng (kg)', 'Bao Pizza Lớn (kg)',
-                'Bao rác (kg)', 'Dây thun (bịch)', 'Ly nhựa (lốc)', 'Bao Đế L (kg)', 'Bao Đế S (kg)'
+                'Bao rác (kg)', 'Dây thun (bịch)', 'Ly nhựa (lốc)', 'Bao Đế L (kg)', 'Bao Đế S (kg)', 'Giấy nến', 'Giấy KTC'
             ],
             "Đồ uống & bánh": [
                 'Coca chai', 'Coca lon', 'Nước suối', 'Bia Blance', 'Bia Quy Nhơn', 'Bánh mì'
@@ -899,6 +901,7 @@
 
         function addExportItem() {
             createItemRow('exportItemsContainer', {
+                'Nguyên liệu sống': categories['Nguyên liệu sống'],
                 'Thành phẩm': categories['Thành phẩm'],
                 'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
                 'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
