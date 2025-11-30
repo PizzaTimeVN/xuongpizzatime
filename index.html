@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Xưởng Pizza Time</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -664,756 +663,765 @@
     </div>
 
     <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://tyuufjwutazjfuiawiul.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5dXVmand1dGF6amZ1aWF3aXVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MDk4OTIsImV4cCI6MjA3NjA4NTg5Mn0.8WEsb2tBD6akNA9h9tR9zIAqjkZz0xZYVNbYCx2dEbc';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        // Discord Webhook URL - THAY ĐỔI URL NÀY BẰNG WEBHOOK CỦA BẠN
-        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1387472354149400748/t4uIPrQMAPg1MuUDOm8DW3r-2dDXQMQhdVxJ8QrUPX9igBBwyOOrsxVIdRQDzclI5smh';
-        
-        let inventoryData = {};
-        
-        // Categories and items
-        const categories = {
-            "Thành phẩm": [
-                'Đế L', 'Đế S', 'Phô Mai L', 'Phô Mai S', 'Bò pizza (bịch)', 'Bò mì Ý (bịch)',
-                'Gà pizza (bịch)', 'Tôm (bịch)', 'Mực (bịch)', 'Cá Ngừ (bịch)', 'XXH (bịch)',
-                'XXĐ (bịch)', 'Ba Rọi (bịch)', 'Bò sốt cay (bịch)', 'Sốt sữa (bịch)', 'Sốt cà (hũ)',
-                'Sốt Gà', 'Salami (bịch)', 'Đùi Gà (cái)', 'Đá Me (bịch)', 'Gà Lắc (bịch)',
-                'XX Chiên Xù', 'Mứt đào (bịch)', 'KTC (bịch)', 'Tok (bịch)', 'Miếng đào (bịch)',
-                'Nấm (bịch)', 'Bông Cải Xanh (bịch)', 'Bom Phô Mai (viên)'
-            ],
-            "Nguyên liệu sống": [
-                'Phô mai cam', 'Phô mai Topping', 'Phô Mai Emborg', 'Phô mai trắng', 'Phô mai vàng',
-                'Phô mai tươi', 'Bò nguyên', 'Gà ức', 'Đùi Gà', 'Bò Miếng Sống', 'Tôm sống (phần)',
-                'Mực sống (phần)', 'Thanh Cua Nguyên', 'Ba Rọi Nguyên', 'Xúc xích Đức Nguyên', 'Xúc xích heo nguyên',
-                'Cà chua', 'Cà rốt', 'Hành Tây', 'Khoai Tây (Củ)', 'Khoai Tây Chiên Nguyên', 'Cá ngừ hũ L', 'Cá ngừ hũ S'
-            ],
-            "Gia vị & nguyên liệu khô": [
-                'Men (bì)', 'Bột (bao)', 'Đường (bì)', 'Muối (bì)', 'Xì dầu (chai)', 'Rượu (chai)',
-                'Tiêu', 'Dầu ăn (can)', 'Dầu Hào (chai)','Mì Ý Nguyên', 'Bắp (Kg)', 'Mayo nhỏ', 'Mayo lớn', 'Bơ', 
-                'Cà chua paste', 'Bột chiên gà (bịch)', 'Bột phô mai lắc gà'
-            ],
-            "Bao bì & vật dụng": [
-                'Bao 1 món (kg)', 'Bao cân bò (kg)', 'Bao cân mì (kg)', 'Bì vàng (kg)', 'Bao Pizza Lớn (kg)',
-                'Bao rác (kg)', 'Dây thun (bịch)', 'Ly nhựa (lốc)', 'Bao Đế L (kg)', 'Bao Đế S (kg)', 'Giấy nến', 'Giấy KTC',
-                'Thùng L', 'Thùng S'
-            ],
-            "Đồ uống & bánh": [
-                'Coca chai', 'Coca lon', 'Nước suối', 'Bia Blance', 'Bia Quy Nhơn', 'Bánh mì'
-            ]
+    // API Configuration
+    const API_BASE_URL = 'https://pizza-backend-jufu.onrender.com';
+    let authToken = '';
+    let inventoryData = {};
+    let currentDate = '';
+    let currentUser = '';
+    let isSaving = false;
+    
+    // Categories and items
+    const categories = {
+        "Thành phẩm": [
+            'Đế L', 'Đế S', 'Phô Mai L', 'Phô Mai S', 'Bò pizza (bịch)', 'Bò mì Ý (bịch)',
+            'Gà pizza (bịch)', 'Tôm (bịch)', 'Mực (bịch)', 'Cá Ngừ (bịch)', 'XXH (bịch)',
+            'XXĐ (bịch)', 'Ba Rọi (bịch)', 'Bò sốt cay (bịch)', 'Sốt sữa (bịch)', 'Sốt cà (hũ)',
+            'Sốt Gà', 'Salami (bịch)', 'Đùi Gà (cái)', 'Đá Me (bịch)', 'Gà Lắc (bịch)',
+            'XX Chiên Xù', 'Mứt đào (bịch)', 'KTC (bịch)', 'Tok (bịch)', 'Miếng đào (bịch)',
+            'Nấm (bịch)', 'Bông Cải Xanh (bịch)', 'Bom Phô Mai (viên)'
+        ],
+        "Nguyên liệu sống": [
+            'Phô mai cam', 'Phô mai Topping', 'Phô Mai Emborg', 'Phô mai trắng', 'Phô mai vàng',
+            'Phô mai tươi', 'Bò nguyên', 'Gà ức', 'Đùi Gà', 'Bò Miếng Sống', 'Tôm sống (phần)',
+            'Mực sống (phần)', 'Thanh Cua Nguyên', 'Ba Rọi Nguyên', 'Xúc xích Đức Nguyên', 'Xúc xích heo nguyên',
+            'Cà chua', 'Cà rốt', 'Hành Tây', 'Khoai Tây (Củ)', 'Khoai Tây Chiên Nguyên', 'Cá ngừ hũ L', 'Cá ngừ hũ S'
+        ],
+        "Gia vị & nguyên liệu khô": [
+            'Men (bì)', 'Bột (bao)', 'Đường (bì)', 'Muối (bì)', 'Xì dầu (chai)', 'Rượu (chai)',
+            'Tiêu', 'Dầu ăn (can)', 'Dầu Hào (chai)','Mì Ý Nguyên', 'Bắp (Kg)', 'Mayo nhỏ', 'Mayo lớn', 'Bơ', 
+            'Cà chua paste', 'Bột chiên gà (bịch)', 'Bột phô mai lắc gà'
+        ],
+        "Bao bì & vật dụng": [
+            'Bao 1 món (kg)', 'Bao cân bò (kg)', 'Bao cân mì (kg)', 'Bì vàng (kg)', 'Bao Pizza Lớn (kg)',
+            'Bao rác (kg)', 'Dây thun (bịch)', 'Ly nhựa (lốc)', 'Bao Đế L (kg)', 'Bao Đế S (kg)', 'Giấy nến', 'Giấy KTC', 'Thùng L','Thùng S'
+        ],
+        "Đồ uống & bánh": [
+            'Coca chai', 'Coca lon', 'Nước suối', 'Bia Blance', 'Bia Quy Nhơn', 'Bánh mì'
+        ]
+    };
+    
+    // Set default date to today
+    document.getElementById('loginDate').valueAsDate = new Date();
+
+    // Helper function để gọi API
+    async function callAPI(endpoint, method = 'GET', body = null) {
+        const options = {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+            }
         };
         
-        // Set default date to today
-        document.getElementById('loginDate').valueAsDate = new Date();
+        if (authToken) {
+            options.headers['Authorization'] = `Basic ${authToken}`;
+        }
         
-        const users = {
-            "Bo": "123",
-            "Nhu2k6": "Xinh@Dep",
-            "Ngan2k2": "Dep$Gioi",
-            "admin": "123"
-        };
+        if (body) {
+            options.body = JSON.stringify(body);
+        }
+        
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.statusText}`);
+        }
+        
+        return response.json();
+    }
 
-        let currentDate = '';
-        let currentUser = '';
+    // Login
+    async function login() {
+        const date = document.getElementById('loginDate').value;
+        const name = document.getElementById('loginName').value.trim();
+        const password = document.getElementById('loginPassword').value;
 
-        function login() {
-            const date = document.getElementById('loginDate').value;
-            const name = document.getElementById('loginName').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (!date || !name || !password) {
-                alert('Vui lòng nhập đầy đủ thông tin!');
-                return;
-            }
-
-            if (!(name in users) || users[name] !== password) {
-                alert('Tên người dùng hoặc mật khẩu không đúng!');
-                return;
-            }
-
-            currentDate = date;
-            currentUser = name;
-
-            localStorage.setItem('currentDate', currentDate);
-            localStorage.setItem('currentUser', currentUser);
-
-            document.getElementById('loginScreen').classList.remove('active');
-            document.getElementById('mainScreen').classList.add('active');
-
-            document.getElementById('currentDate').textContent = currentDate;
-            document.getElementById('currentUser').textContent = currentUser;
-
-            loadInventory();
+        if (!date || !name || !password) {
+            alert('Vui lòng nhập đầy đủ thông tin!');
+            return;
         }
 
-        function logout() {
-            currentDate = '';
-            currentUser = '';
-            localStorage.removeItem('currentDate');
-            localStorage.removeItem('currentUser');
+        try {
+            authToken = btoa(`${name}:${password}`);
+            
+            const response = await callAPI('/api/auth/login', 'POST', {
+                username: name,
+                password: password,
+                date: date
+            });
 
-            document.getElementById('mainScreen').classList.remove('active');
-            document.getElementById('loginScreen').classList.add('active');
+            if (response.success) {
+                currentDate = date;
+                currentUser = name;
+                
+                localStorage.setItem('currentDate', currentDate);
+                localStorage.setItem('currentUser', currentUser);
+                localStorage.setItem('authToken', authToken);
 
-            document.getElementById('loginDate').value = '';
-            document.getElementById('loginName').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
+                document.getElementById('loginScreen').classList.remove('active');
+                document.getElementById('mainScreen').classList.add('active');
+                document.getElementById('currentDate').textContent = currentDate;
+                document.getElementById('currentUser').textContent = currentUser;
 
-        // Load Inventory
-        async function loadInventory() {
-            const { data, error } = await supabase
-                .from('inventory')
-                .select('*');
-
-            if (error) {
-                console.error('Lỗi load inventory:', error);
-                return;
+                await loadInventory();
             }
+        } catch (error) {
+            alert('Tên người dùng hoặc mật khẩu không đúng!');
+            console.error('Login error:', error);
+        }
+    }
 
+    // Logout
+    function logout() {
+        currentDate = '';
+        currentUser = '';
+        authToken = '';
+        localStorage.removeItem('currentDate');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('authToken');
+
+        document.getElementById('mainScreen').classList.remove('active');
+        document.getElementById('loginScreen').classList.add('active');
+
+        document.getElementById('loginDate').value = '';
+        document.getElementById('loginName').value = '';
+        document.getElementById('loginPassword').value = '';
+    }
+
+    // Load Inventory
+    async function loadInventory() {
+        try {
+            const response = await callAPI('/api/inventory');
+            
             inventoryData = {};
-            data.forEach(row => {
+            response.data.forEach(row => {
                 inventoryData[row.item] = row.quantity;
             });
 
             displayInventory();
             displayAlerts();
+        } catch (error) {
+            console.error('Lỗi load inventory:', error);
+            alert('Không thể tải dữ liệu tồn kho');
         }
+    }
 
-        // Update Inventory
-        async function updateInventory(itemName, quantityChange, type = 'manual', store = null) {
-            const currentQty = inventoryData[itemName] || 0;
-            const newQty = currentQty + quantityChange;
-            inventoryData[itemName] = newQty;
+    // Update Inventory
+    async function updateInventory(itemName, quantityChange, type = 'manual', store = null) {
+        const currentQty = inventoryData[itemName] || 0;
+        const newQty = currentQty + quantityChange;
+        inventoryData[itemName] = newQty;
 
-            const { error: invError } = await supabase
-                .from('inventory')
-                .upsert({ item: itemName, quantity: newQty }, { onConflict: 'item' });
-
-            if (invError) console.error('❌ Lỗi ghi inventory:', invError);
-
-            const today = new Date().toISOString().slice(0, 10);
-
-            if (type === 'raw_input') {
-                const { error } = await supabase.from('raw_materials_input').insert([{
-                    date: today,
-                    user_name: currentUser,
-                    item: itemName,
-                    quantity: quantityChange
-                }]);
-                if (error) console.error('❌ Lỗi ghi raw_materials_input:', error);
-
-            } else if (type === 'production') {
-                const { error } = await supabase.from('production').insert([{
-                    date: today,
-                    user_name: currentUser,
-                    item: itemName,
-                    quantity: quantityChange
-                }]);
-                if (error) console.error('❌ Lỗi ghi production:', error);
-
-            } else if (type === 'export') {
-                const { error } = await supabase.from('exports').insert([{
-                    date: today,
-                    user_name: currentUser,
-                    store: store,
-                    item: itemName,
-                    quantity: quantityChange
-                }]);
-                if (error) console.error('❌ Lỗi ghi exports:', error);
-            }
+        try {
+            await callAPI('/api/inventory/update', 'POST', {
+                item: itemName,
+                quantity: newQty
+            });
 
             displayInventory();
             displayAlerts();
+        } catch (error) {
+            console.error('❌ Lỗi cập nhật inventory:', error);
+            alert('Không thể cập nhật tồn kho');
         }
+    }
 
-        // Item Row UI
-        function createItemRow(containerId, categoryList) {
-            const container = document.getElementById(containerId);
-            const row = document.createElement('div');
-            row.className = 'item-row';
+    // Item Row UI
+    function createItemRow(containerId, categoryList) {
+        const container = document.getElementById(containerId);
+        const row = document.createElement('div');
+        row.className = 'item-row';
 
-            let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
-            for (let cat in categoryList) {
-                optionsHTML += `<optgroup label="${cat}">`;
-                categoryList[cat].forEach(item => {
-                    optionsHTML += `<option value="${item}">${item}</option>`;
-                });
-                optionsHTML += '</optgroup>';
-            }
-
-            row.innerHTML = `
-                <select class="item-select">${optionsHTML}</select>
-                <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
-                <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
-            `;
-
-            container.appendChild(row);
-        }
-
-        function getItemsFromContainer(containerId) {
-            const container = document.getElementById(containerId);
-            const rows = container.querySelectorAll('.item-row');
-            const items = [];
-
-            rows.forEach(row => {
-                const name = row.querySelector('.item-select').value;
-                const quantity = parseFloat(row.querySelector('.item-quantity').value);
-                if (name && quantity > 0) items.push({ name, quantity });
+        let optionsHTML = '<option value="">-- Chọn mặt hàng --</option>';
+        for (let cat in categoryList) {
+            optionsHTML += `<optgroup label="${cat}">`;
+            categoryList[cat].forEach(item => {
+                optionsHTML += `<option value="${item}">${item}</option>`;
             });
-
-            return items;
+            optionsHTML += '</optgroup>';
         }
 
-        // Init screens
-        function initRawInput() {
-            document.getElementById('rawItemsContainer').innerHTML = '';
-            document.getElementById('rawSuccessMsg').innerHTML = '';
-            addRawItem();
-        }
+        row.innerHTML = `
+            <select class="item-select">${optionsHTML}</select>
+            <input type="number" class="item-quantity" placeholder="Số lượng" min="0" step="0.1" />
+            <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">Xóa</button>
+        `;
 
-        function addRawItem() {
-            const rawCategories = {
-                'Nguyên liệu sống': categories['Nguyên liệu sống'],
-                'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
-                'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
-                'Đồ uống & bánh': categories['Đồ uống & bánh']
-            };
-            createItemRow('rawItemsContainer', rawCategories);
-        }
+        container.appendChild(row);
+    }
 
-        function initProdInput() {
-            document.getElementById('prodItemsContainer').innerHTML = '';
-            document.getElementById('prodSuccessMsg').innerHTML = '';
-            addProdItem();
-        }
+    function getItemsFromContainer(containerId) {
+        const container = document.getElementById(containerId);
+        const rows = container.querySelectorAll('.item-row');
+        const items = [];
 
-        function addProdItem() {
-            createItemRow('prodItemsContainer', {'Thành phẩm': categories['Thành phẩm']});
-        }
+        rows.forEach(row => {
+            const name = row.querySelector('.item-select').value;
+            const quantity = parseFloat(row.querySelector('.item-quantity').value);
+            if (name && quantity > 0) items.push({ name, quantity });
+        });
 
-        function initExportInput() {
-            document.getElementById('exportItemsContainer').innerHTML = '';
-            document.getElementById('exportSuccessMsg').innerHTML = '';
-            addExportItem();
-            loadExportHistory(); // Thêm dòng này
-        }
+        return items;
+    }
 
-        function addExportItem() {
-            createItemRow('exportItemsContainer', {
-                'Nguyên liệu sống': categories['Nguyên liệu sống'],
-                'Thành phẩm': categories['Thành phẩm'],
-                'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
-                'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
-                'Đồ uống & bánh': categories['Đồ uống & bánh']
-            });
-        }
+    // Init screens
+    function initRawInput() {
+        document.getElementById('rawItemsContainer').innerHTML = '';
+        document.getElementById('rawSuccessMsg').innerHTML = '';
+        addRawItem();
+    }
 
-        // Save functions
-        async function saveRawInput() {
+    function addRawItem() {
+        const rawCategories = {
+            'Nguyên liệu sống': categories['Nguyên liệu sống'],
+            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+            'Đồ uống & bánh': categories['Đồ uống & bánh']
+        };
+        createItemRow('rawItemsContainer', rawCategories);
+    }
+
+    function initProdInput() {
+        document.getElementById('prodItemsContainer').innerHTML = '';
+        document.getElementById('prodSuccessMsg').innerHTML = '';
+        addProdItem();
+    }
+
+    function addProdItem() {
+        createItemRow('prodItemsContainer', {'Thành phẩm': categories['Thành phẩm']});
+    }
+
+    function initExportInput() {
+        document.getElementById('exportItemsContainer').innerHTML = '';
+        document.getElementById('exportSuccessMsg').innerHTML = '';
+        addExportItem();
+        loadExportHistory();
+    }
+
+    function addExportItem() {
+        createItemRow('exportItemsContainer', {
+            'Nguyên liệu sống': categories['Nguyên liệu sống'],
+            'Thành phẩm': categories['Thành phẩm'],
+            'Gia vị & nguyên liệu khô': categories['Gia vị & nguyên liệu khô'],
+            'Bao bì & vật dụng': categories['Bao bì & vật dụng'],
+            'Đồ uống & bánh': categories['Đồ uống & bánh']
+        });
+    }
+
+    // Save functions
+    async function saveRawInput() {
+        if (isSaving) return;
+        isSaving = true;
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang lưu...';
+
+        try {
             const items = getItemsFromContainer('rawItemsContainer');
             if (!items.length) return;
-            for (let item of items) await updateInventory(item.name, item.quantity, 'raw_input');
+            
+            await callAPI('/api/raw-materials', 'POST', {
+                date: currentDate,
+                user_name: currentUser,
+                items: items
+            });
+            
+            await loadInventory();
             document.getElementById('rawSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
             setTimeout(() => initRawInput(), 2000);
+        } catch (error) {
+            alert('Lỗi lưu dữ liệu: ' + error.message);
+        } finally {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Lưu';
+                isSaving = false;
+            }, 2000);
         }
+    }
 
-        async function saveProduction() {
+    async function saveProduction() {
+        if (isSaving) return;
+        isSaving = true;
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang lưu...';
+
+        try {
             const items = getItemsFromContainer('prodItemsContainer');
             if (!items.length) return;
-            for (let item of items) await updateInventory(item.name, item.quantity, 'production');
+            
+            await callAPI('/api/production', 'POST', {
+                date: currentDate,
+                user_name: currentUser,
+                items: items
+            });
+            
+            await loadInventory();
             document.getElementById('prodSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã lưu thành công!</div>';
             setTimeout(() => initProdInput(), 2000);
+        } catch (error) {
+            alert('Lỗi lưu dữ liệu: ' + error.message);
+        } finally {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Lưu';
+                isSaving = false;
+            }, 2000);
         }
+    }
 
-        // Sửa lại function saveExport() để reload bảng sau khi lưu
-        async function saveExport() {
+    async function saveExport() {
+        if (isSaving) return;
+        isSaving = true;
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang xuất...';
+
+        try {
             const store = document.getElementById('storeSelect').value;
             const items = getItemsFromContainer('exportItemsContainer');
             if (!items.length) return;
-            for (let item of items) await updateInventory(item.name, -item.quantity, 'export', store);
+            
+            await callAPI('/api/exports/create', 'POST', {
+                date: currentDate,
+                user_name: currentUser,
+                store: store,
+                items: items
+            });
+            
+            await loadInventory();
+            await loadExportHistory();
             document.getElementById('exportSuccessMsg').innerHTML = '<div class="success-msg">✓ Đã xuất hàng thành công!</div>';
-            await loadExportHistory(); // Reload bảng lịch sử
             setTimeout(() => initExportInput(), 2000);
+        } catch (error) {
+            alert('Lỗi xuất hàng: ' + error.message);
+        } finally {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = '📤 Xuất hàng';
+                isSaving = false;
+            }, 2000);
         }
+    }
 
-        // Display Inventory - NEW CARD LAYOUT
-        function displayInventory() {
-            const container = document.getElementById('inventoryContainer');
-            if (!container) return;
-            container.innerHTML = '';
+    // Display Inventory
+    function displayInventory() {
+        const container = document.getElementById('inventoryContainer');
+        if (!container) return;
+        container.innerHTML = '';
 
-            const categoryClasses = {
-                'Thành phẩm': 'cat-thanh-pham',
-                'Nguyên liệu sống': 'cat-nguyen-lieu',
-                'Gia vị & nguyên liệu khô': 'cat-gia-vi',
-                'Bao bì & vật dụng': 'cat-bao-bi',
-                'Đồ uống & bánh': 'cat-do-uong'
-            };
+        const categoryClasses = {
+            'Thành phẩm': 'cat-thanh-pham',
+            'Nguyên liệu sống': 'cat-nguyen-lieu',
+            'Gia vị & nguyên liệu khô': 'cat-gia-vi',
+            'Bao bì & vật dụng': 'cat-bao-bi',
+            'Đồ uống & bánh': 'cat-do-uong'
+        };
 
-            const categoryIcons = {
-                'Thành phẩm': '🍕',
-                'Nguyên liệu sống': '🥩',
-                'Gia vị & nguyên liệu khô': '🧂',
-                'Bao bì & vật dụng': '📦',
-                'Đồ uống & bánh': '🥤'
-            };
+        const categoryIcons = {
+            'Thành phẩm': '🍕',
+            'Nguyên liệu sống': '🥩',
+            'Gia vị & nguyên liệu khô': '🧂',
+            'Bao bì & vật dụng': '📦',
+            'Đồ uống & bánh': '🥤'
+        };
 
-            for (let cat in categories) {
-                const items = categories[cat];
-                const lowStockCount = items.filter(item => (inventoryData[item] || 0) < 3).length;
-                
-                // Category Card
-                const card = document.createElement('div');
-                card.className = 'category-card';
-                card.dataset.category = cat;
+        for (let cat in categories) {
+            const items = categories[cat];
+            const lowStockCount = items.filter(item => (inventoryData[item] || 0) < 3).length;
+            
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.dataset.category = cat;
 
-                // Header
-                const header = document.createElement('div');
-                header.className = `category-header ${categoryClasses[cat] || ''}`;
-                header.innerHTML = `
-                    <div class="category-title">
-                        <span class="category-icon">▶</span>
-                        <span>${categoryIcons[cat] || '📋'} ${cat}</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        ${lowStockCount > 0 ? `<span class="status-badge status-critical">⚠️ ${lowStockCount} sắp hết</span>` : ''}
-                        <span class="category-count">${items.length} sản phẩm</span>
+            const header = document.createElement('div');
+            header.className = `category-header ${categoryClasses[cat] || ''}`;
+            header.innerHTML = `
+                <div class="category-title">
+                    <span class="category-icon">▶</span>
+                    <span>${categoryIcons[cat] || '📋'} ${cat}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    ${lowStockCount > 0 ? `<span class="status-badge status-critical">⚠️ ${lowStockCount} sắp hết</span>` : ''}
+                    <span class="category-count">${items.length} sản phẩm</span>
+                </div>
+            `;
+
+            const body = document.createElement('div');
+            body.className = 'category-body';
+
+            const grid = document.createElement('div');
+            grid.className = 'item-grid';
+
+            items.forEach(item => {
+                const qty = inventoryData[item] || 0;
+                let statusClass = '';
+                let statusBadge = '';
+
+                if (qty === 0) {
+                    statusClass = 'low-stock';
+                    statusBadge = '<span class="status-badge status-critical">❌ Hết hàng</span>';
+                } else if (qty < 3) {
+                    statusClass = 'low-stock';
+                    statusBadge = '<span class="status-badge status-low">⚠️ Sắp hết</span>';
+                } else {
+                    statusBadge = '<span class="status-badge status-ok">✓ Đủ hàng</span>';
+                }
+
+                const itemCard = document.createElement('div');
+                itemCard.className = `item-card ${statusClass}`;
+                itemCard.dataset.itemName = item;
+                itemCard.innerHTML = `
+                    <div class="item-name">${item}</div>
+                    <div class="item-controls">
+                        <input type="number" class="item-quantity" value="${qty}" step="0.1" min="0"
+                            onchange="updateInventoryDirect('${item}', this.value)" />
+                        ${statusBadge}
                     </div>
                 `;
 
-                // Body
-                const body = document.createElement('div');
-                body.className = 'category-body';
+                grid.appendChild(itemCard);
+            });
 
-                const grid = document.createElement('div');
-                grid.className = 'item-grid';
+            body.appendChild(grid);
+            card.appendChild(header);
+            card.appendChild(body);
+            container.appendChild(card);
 
-                items.forEach(item => {
-                    const qty = inventoryData[item] || 0;
-                    let statusClass = '';
-                    let statusBadge = '';
-
-                    if (qty === 0) {
-                        statusClass = 'low-stock';
-                        statusBadge = '<span class="status-badge status-critical">❌ Hết hàng</span>';
-                    } else if (qty < 3) {
-                        statusClass = 'low-stock';
-                        statusBadge = '<span class="status-badge status-low">⚠️ Sắp hết</span>';
-                    } else {
-                        statusBadge = '<span class="status-badge status-ok">✓ Đủ hàng</span>';
-                    }
-
-                    const itemCard = document.createElement('div');
-                    itemCard.className = `item-card ${statusClass}`;
-                    itemCard.dataset.itemName = item;
-                    itemCard.innerHTML = `
-                        <div class="item-name">${item}</div>
-                        <div class="item-controls">
-                            <input type="number" class="item-quantity" value="${qty}" step="0.1" min="0"
-                                onchange="updateInventoryDirect('${item}', this.value)" />
-                            ${statusBadge}
-                        </div>
-                    `;
-
-                    grid.appendChild(itemCard);
-                });
-
-                body.appendChild(grid);
-                card.appendChild(header);
-                card.appendChild(body);
-                container.appendChild(card);
-
-                // Toggle functionality
-                header.addEventListener('click', () => {
-                    const icon = header.querySelector('.category-icon');
-                    const isExpanded = body.classList.contains('show');
-                    
-                    if (isExpanded) {
-                        body.classList.remove('show');
-                        icon.classList.remove('expanded');
-                    } else {
-                        body.classList.add('show');
-                        icon.classList.add('expanded');
-                    }
-                });
-            }
-        }
-
-        function searchInventory() {
-            const keyword = document.getElementById('inventorySearch').value.trim().toLowerCase();
-            const cards = document.querySelectorAll('.category-card');
-
-            cards.forEach(card => {
-                const items = card.querySelectorAll('.item-card');
-                let visibleCount = 0;
-
-                items.forEach(itemCard => {
-                    const name = itemCard.dataset.itemName.toLowerCase();
-                    if (name.includes(keyword)) {
-                        itemCard.style.display = 'flex';
-                        visibleCount++;
-                    } else {
-                        itemCard.style.display = 'none';
-                    }
-                });
-
-                // Auto expand if search has results
-                const body = card.querySelector('.category-body');
-                const icon = card.querySelector('.category-icon');
+            header.addEventListener('click', () => {
+                const icon = header.querySelector('.category-icon');
+                const isExpanded = body.classList.contains('show');
                 
-                if (keyword && visibleCount > 0) {
+                if (isExpanded) {
+                    body.classList.remove('show');
+                    icon.classList.remove('expanded');
+                } else {
                     body.classList.add('show');
                     icon.classList.add('expanded');
-                    card.style.display = 'block';
-                } else if (keyword && visibleCount === 0) {
-                    card.style.display = 'none';
-                } else {
-                    card.style.display = 'block';
                 }
             });
         }
+    }
 
-        function updateInventoryDirect(itemName, newValue) {
-            const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
-            updateInventory(itemName, diff, 'manual');
-        }
+    function searchInventory() {
+        const keyword = document.getElementById('inventorySearch').value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.category-card');
 
-        function displayAlerts() {
-            const container = document.getElementById('alertsContainer');
-            container.innerHTML = '';
-            let lowStockItems = [];
+        cards.forEach(card => {
+            const items = card.querySelectorAll('.item-card');
+            let visibleCount = 0;
 
-            for (const [groupName, items] of Object.entries(categories)) {
-                items.forEach(item => {
-                    const qty = parseFloat(inventoryData[item] || 0);
-                    if (qty < 3) lowStockItems.push({ name: item, quantity: qty });
-                });
-            }
+            items.forEach(itemCard => {
+                const name = itemCard.dataset.itemName.toLowerCase();
+                if (name.includes(keyword)) {
+                    itemCard.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    itemCard.style.display = 'none';
+                }
+            });
 
-            if (!lowStockItems.length) {
-                container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
+            const body = card.querySelector('.category-body');
+            const icon = card.querySelector('.category-icon');
+            
+            if (keyword && visibleCount > 0) {
+                body.classList.add('show');
+                icon.classList.add('expanded');
+                card.style.display = 'block';
+            } else if (keyword && visibleCount === 0) {
+                card.style.display = 'none';
             } else {
-                let html = `
-                    <div class="alert">
-                        <p style="margin-bottom:15px;"><strong>⚠️ Có ${lowStockItems.length} mặt hàng sắp hết hoặc đã hết!</strong></p>
-                        <table class="alert-table">
-                            <thead>
-                                <tr>
-                                    <th width="50">
-                                        <input type="checkbox" id="selectAll" onchange="toggleAllOrders(this.checked)" />
-                                    </th>
-                                    <th>Mặt hàng</th>
-                                    <th width="100">Tồn kho</th>
-                                    <th width="120">Số lượng đặt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                lowStockItems.forEach((item, index) => {
-                    const suggestedQty = item.quantity === 0 ? 10 : 5;
-                    html += `
-                        <tr>
-                            <td style="text-align:center;">
-                                <input type="checkbox" class="order-checkbox" data-item="${item.name}" data-index="${index}" />
-                            </td>
-                            <td><strong>${item.name}</strong></td>
-                            <td style="color: ${item.quantity === 0 ? 'red' : 'orange'}; font-weight: bold; text-align: center;">
-                                ${item.quantity}
-                            </td>
-                            <td>
-                                <input type="number" class="order-quantity" data-item="${item.name}" 
-                                    value="${suggestedQty}" min="1" step="1" />
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                        <div class="order-actions">
-                            <button class="btn btn-secondary" onclick="clearAllOrders()">Bỏ chọn tất cả</button>
-                            <button class="btn btn-order" onclick="sendOrderToDiscord()">📤 Gửi đơn đặt hàng</button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML = html;
+                card.style.display = 'block';
             }
-        }
-        async function loadStoreInventory() {
-            const store = document.getElementById('storeInventorySelect').value;
-            const container = document.getElementById('storeInventoryContainer');
+        });
+    }
 
-            if (!store) {
-                container.innerHTML = "";
+    function updateInventoryDirect(itemName, newValue) {
+        const diff = (parseFloat(newValue) || 0) - (inventoryData[itemName] || 0);
+        updateInventory(itemName, diff, 'manual');
+    }
+
+    function displayAlerts() {
+        const container = document.getElementById('alertsContainer');
+        container.innerHTML = '';
+        let lowStockItems = [];
+
+        for (const [groupName, items] of Object.entries(categories)) {
+            items.forEach(item => {
+                const qty = parseFloat(inventoryData[item] || 0);
+                if (qty < 3) lowStockItems.push({ name: item, quantity: qty });
+            });
+        }
+
+        if (!lowStockItems.length) {
+            container.innerHTML = '<div class="alert">✓ Không có mặt hàng nào sắp hết!</div>';
+        } else {
+            let html = `
+                <div class="alert">
+                    <p style="margin-bottom:15px;"><strong>⚠️ Có ${lowStockItems.length} mặt hàng sắp hết hoặc đã hết!</strong></p>
+                    <table class="alert-table">
+                        <thead>
+                            <tr>
+                                <th width="50">
+                                    <input type="checkbox" id="selectAll" onchange="toggleAllOrders(this.checked)" />
+                                </th>
+                                <th>Mặt hàng</th>
+                                <th width="100">Tồn kho</th>
+                                <th width="120">Số lượng đặt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            lowStockItems.forEach((item, index) => {
+                const suggestedQty = item.quantity === 0 ? 10 : 5;
+                html += `
+                    <tr>
+                        <td style="text-align:center;">
+                            <input type="checkbox" class="order-checkbox" data-item="${item.name}" data-index="${index}" />
+                        </td>
+                        <td><strong>${item.name}</strong></td>
+                        <td style="color: ${item.quantity === 0 ? 'red' : 'orange'}; font-weight: bold; text-align: center;">
+                            ${item.quantity}
+                        </td>
+                        <td>
+                            <input type="number" class="order-quantity" data-item="${item.name}" 
+                                value="${suggestedQty}" min="1" step="1" />
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                    <div class="order-actions">
+                        <button class="btn btn-secondary" onclick="clearAllOrders()">Bỏ chọn tất cả</button>
+                        <button class="btn btn-order" onclick="sendOrderToDiscord()">📤 Gửi đơn đặt hàng</button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+    }
+
+    async function loadStoreInventory() {
+        const store = document.getElementById('storeInventorySelect').value;
+        const container = document.getElementById('storeInventoryContainer');
+
+        if (!store) {
+            container.innerHTML = "";
+            return;
+        }
+
+        container.innerHTML = `<p>⏳ Đang tải dữ liệu tồn kho...</p>`;
+
+        try {
+            const response = await callAPI(`/api/store-inventory/${store}`);
+
+            if (!response.data) {
+                container.innerHTML = `<p>⚠️ Chưa có dữ liệu tồn kho cho quán <b>${store}</b>.</p>`;
                 return;
             }
 
-            container.innerHTML = `<p>⏳ Đang tải dữ liệu tồn kho...</p>`;
+            const record = response.data;
+            const inventory = record.inventory || {};
+            const dateStr = record.date 
+                ? new Date(record.date).toLocaleDateString('vi-VN')
+                : new Date(record.created_at).toLocaleString('vi-VN');
 
-            try {
-                const { data, error } = await supabase
-                    .from('ton_quan')
-                    .select('inventory, date, created_at')
-                    .eq('store_id', store)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
+            let html = `
+                <h3>📦 Tồn kho quán ${store}</h3>
+                <p style="color:#777;">Cập nhật gần nhất: ${dateStr}</p>
+                <table border="1" cellspacing="0" cellpadding="6" style="border-collapse: collapse; width:100%;">
+                    <thead style="background:#f3f3f3;">
+                        <tr><th style="text-align:left;">Mặt hàng</th><th>Số lượng</th></tr>
+                    </thead>
+                    <tbody>
+            `;
 
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    container.innerHTML = `<p>⚠️ Chưa có dữ liệu tồn kho cho quán <b>${store}</b>.</p>`;
-                    return;
+            for (const [item, qty] of Object.entries(inventory)) {
+                const color = qty < 3 ? 'red' : 'black';
+                html += `<tr><td>${item}</td><td style="color:${color};">${qty}</td></tr>`;
+            }
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+
+        } catch (err) {
+            console.error('❌ Lỗi load tồn kho:', err);
+            container.innerHTML = `<p style="color:red;">Lỗi tải dữ liệu tồn kho. Vui lòng thử lại.</p>`;
+        }
+    }
+
+    // Navigation
+    function showScreen(screen) {
+        document.getElementById('mainScreen').style.display = 'none';
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
+            .forEach(s => document.getElementById(s).style.display='none');
+
+        switch(screen) {
+            case 'rawInput': document.getElementById('rawInputScreen').style.display='block'; initRawInput(); break;
+            case 'productionInput': document.getElementById('productionInputScreen').style.display='block'; initProdInput(); break;
+            case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
+            case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
+            case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
+            case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
+        }
+    }
+
+    function backToMenu() {
+        ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
+            .forEach(s => document.getElementById(s).style.display='none');
+        document.getElementById('mainScreen').style.display='block';
+    }
+
+    function toggleAllOrders(checked) {
+        const checkboxes = document.querySelectorAll('.order-checkbox');
+        checkboxes.forEach(cb => cb.checked = checked);
+    }
+
+    function clearAllOrders() {
+        document.getElementById('selectAll').checked = false;
+        toggleAllOrders(false);
+    }
+
+    async function sendOrderToDiscord() {
+        const checkboxes = document.querySelectorAll('.order-checkbox:checked');
+        
+        if (checkboxes.length === 0) {
+            alert('⚠️ Vui lòng chọn ít nhất một mặt hàng để đặt!');
+            return;
+        }
+
+        const orders = [];
+        checkboxes.forEach(cb => {
+            const itemName = cb.dataset.item;
+            const qtyInput = document.querySelector(`.order-quantity[data-item="${itemName}"]`);
+            const quantity = parseInt(qtyInput.value) || 0;
+            
+            if (quantity > 0) {
+                const currentStock = inventoryData[itemName] || 0;
+                orders.push({
+                    name: itemName,
+                    currentStock: currentStock,
+                    orderQty: quantity
+                });
+            }
+        });
+
+        if (orders.length === 0) {
+            alert('⚠️ Không có mặt hàng nào có số lượng hợp lệ!');
+            return;
+        }
+
+        try {
+            await callAPI('/api/discord/send-order', 'POST', {
+                user_name: currentUser,
+                orders: orders
+            });
+
+            alert('✅ Đã gửi đơn đặt hàng thành công!');
+            clearAllOrders();
+        } catch (error) {
+            console.error('❌ Lỗi gửi đơn hàng:', error);
+            alert('❌ Không thể gửi đơn hàng. Vui lòng thử lại!');
+        }
+    }
+
+    async function loadExportHistory() {
+        const container = document.getElementById('exportHistoryContainer');
+        if (!container) return;
+
+        try {
+            const response = await callAPI('/api/exports/history');
+            
+            if (!response.data || response.data.length === 0) {
+                container.innerHTML = '<div class="no-data">Chưa có dữ liệu xuất hàng nào</div>';
+                return;
+            }
+
+            const exports = response.data;
+            const latestDate = response.date;
+
+            const groupedByStore = {};
+            exports.forEach(exp => {
+                if (!groupedByStore[exp.store]) {
+                    groupedByStore[exp.store] = [];
                 }
+                groupedByStore[exp.store].push(exp);
+            });
 
-                const record = data[0];
-                const inventory = record.inventory || {};
-                const dateStr = record.date 
-                    ? new Date(record.date).toLocaleDateString('vi-VN')
-                    : new Date(record.created_at).toLocaleString('vi-VN');
+            // Tạo HTML
+        let html = `
+            <p style="margin-bottom:15px; color:#666;">
+                <strong>📅 Ngày:</strong> ${new Date(latestDate).toLocaleDateString('vi-VN')}
+            </p>
+            <table class="export-history-table">
+                <thead>
+                    <tr>
+                        <th width="80">Quán</th>
+                        <th>Mặt hàng</th>
+                        <th width="100">Số lượng</th>
+                        <th width="150">Người xuất</th>
+                        <th width="100">Thời gian</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
 
-                let html = `
-                    <h3>📦 Tồn kho quán ${store}</h3>
-                    <p style="color:#777;">Cập nhật gần nhất: ${dateStr}</p>
-                    <table border="1" cellspacing="0" cellpadding="6" style="border-collapse: collapse; width:100%;">
-                        <thead style="background:#f3f3f3;">
-                            <tr><th style="text-align:left;">Mặt hàng</th><th>Số lượng</th></tr>
-                        </thead>
-                        <tbody>
+        for (const [store, items] of Object.entries(groupedByStore)) {
+            items.forEach((exp, idx) => {
+                const time = exp.created_at 
+                    ? new Date(exp.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+                    : '--:--';
+                
+                html += `
+                    <tr>
+                        ${idx === 0 ? `<td rowspan="${items.length}"><span class="store-badge ${store}">${store}</span></td>` : ''}
+                        <td>${exp.item}</td>
+                        <td style="text-align:center; font-weight:600;">${Math.abs(exp.quantity)}</td>
+                        <td>${exp.user_name || 'N/A'}</td>
+                        <td style="text-align:center;">${time}</td>
+                    </tr>
                 `;
-
-                for (const [item, qty] of Object.entries(inventory)) {
-                    const color = qty < 3 ? 'red' : 'black';
-                    html += `<tr><td>${item}</td><td style="color:${color};">${qty}</td></tr>`;
-                }
-
-                html += `</tbody></table>`;
-                container.innerHTML = html;
-
-            } catch (err) {
-                console.error('❌ Lỗi load tồn kho:', err);
-                container.innerHTML = `<p style="color:red;">Lỗi tải dữ liệu tồn kho. Vui lòng thử lại.</p>`;
-            }
+            });
         }
 
-        // Navigation
-        function showScreen(screen) {
-            document.getElementById('mainScreen').style.display = 'none';
-            ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
-                .forEach(s => document.getElementById(s).style.display='none');
+        html += `</tbody></table>`;
+        container.innerHTML = html;
 
-            switch(screen) {
-                case 'rawInput': document.getElementById('rawInputScreen').style.display='block'; initRawInput(); break;
-                case 'productionInput': document.getElementById('productionInputScreen').style.display='block'; initProdInput(); break;
-                case 'exportProduct': document.getElementById('exportProductScreen').style.display='block'; initExportInput(); break;
-                case 'inventory': document.getElementById('inventoryScreen').style.display='block'; displayInventory(); break;
-                case 'alerts': document.getElementById('alertsScreen').style.display='block'; displayAlerts(); break;
-                case 'storeInventory': document.getElementById('storeInventoryScreen').style.display = 'block'; break;
-            }
-        }
+    } catch (err) {
+        console.error('❌ Lỗi load lịch sử xuất hàng:', err);
+        container.innerHTML = '<div class="no-data" style="color:red;">Lỗi tải dữ liệu</div>';
+    }
+}
 
-        function backToMenu() {
-            ['rawInputScreen','productionInputScreen','exportProductScreen','inventoryScreen','alertsScreen','storeInventoryScreen']
-                .forEach(s => document.getElementById(s).style.display='none');
-            document.getElementById('mainScreen').style.display='block';
-        }
-
-        function toggleAllOrders(checked) {
-                const checkboxes = document.querySelectorAll('.order-checkbox');
-                checkboxes.forEach(cb => cb.checked = checked);
-            }
-
-            function clearAllOrders() {
-                document.getElementById('selectAll').checked = false;
-                toggleAllOrders(false);
-            }
-
-            async function sendOrderToDiscord() {
-                const checkboxes = document.querySelectorAll('.order-checkbox:checked');
-                
-                if (checkboxes.length === 0) {
-                    alert('⚠️ Vui lòng chọn ít nhất một mặt hàng để đặt!');
-                    return;
-                }
-
-                const orders = [];
-                checkboxes.forEach(cb => {
-                    const itemName = cb.dataset.item;
-                    const qtyInput = document.querySelector(`.order-quantity[data-item="${itemName}"]`);
-                    const quantity = parseInt(qtyInput.value) || 0;
-                    
-                    if (quantity > 0) {
-                        const currentStock = inventoryData[itemName] || 0;
-                        orders.push({
-                            name: itemName,
-                            currentStock: currentStock,
-                            orderQty: quantity
-                        });
-                    }
-                });
-
-                if (orders.length === 0) {
-                    alert('⚠️ Không có mặt hàng nào có số lượng hợp lệ!');
-                    return;
-                }
-
-                // Tạo nội dung đơn đặt hàng
-                const now = new Date();
-                const dateStr = now.toLocaleDateString('vi-VN');
-                const timeStr = now.toLocaleTimeString('vi-VN');
-                
-                let orderMessage = `🍕 **ĐƠN ĐẶT HÀNG - PIZZA TIME**\n\n`;
-                orderMessage += `📅 **Ngày:** ${dateStr} - ${timeStr}\n`;
-                orderMessage += `👤 **Người đặt:** ${currentUser}\n`;
-                orderMessage += `📦 **Số mặt hàng:** ${orders.length}\n\n`;
-                orderMessage += `**CHI TIẾT ĐƠN HÀNG:**\n`;
-                orderMessage += `${'='.repeat(50)}\n`;
-                
-                orders.forEach((order, idx) => {
-                    orderMessage += `${idx + 1}. **${order.name}**\n`;
-                    orderMessage += `   └ Tồn kho hiện tại: ${order.currentStock}\n`;
-                    orderMessage += `   └ Số lượng đặt: **${order.orderQty}**\n\n`;
-                });
-                
-                orderMessage += `${'='.repeat(50)}\n`;
-                orderMessage += `⚠️ *Vui lòng xác nhận và xử lý đơn hàng này!*`;
-
-                // Gửi đến Discord
-                try {
-                    const response = await fetch(DISCORD_WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            content: orderMessage,
-                            username: 'Pizza Time Bot',
-                            avatar_url: 'https://em-content.zobj.net/thumbs/120/apple/354/pizza_1f355.png'
-                        })
-                    });
-
-                    if (response.ok) {
-                        alert('✅ Đã gửi đơn đặt hàng thành công!');
-                        
-                        // Lưu đơn hàng vào Supabase (optional)
-                        const orderData = {
-                            date: now.toISOString().slice(0, 10),
-                            time: timeStr,
-                            user_name: currentUser,
-                            items: orders,
-                            total_items: orders.length
-                        };
-                        
-                        await supabase.from('orders').insert([orderData]);
-                        
-                        // Reset form
-                        clearAllOrders();
-                    } else {
-                        throw new Error('Discord webhook response not OK');
-                    }
-                } catch (error) {
-                    console.error('❌ Lỗi gửi đơn hàng:', error);
-                    alert('❌ Không thể gửi đơn hàng. Vui lòng kiểm tra lại Discord Webhook URL!');
-                }
-            }
-
-            // Thêm function load lịch sử xuất hàng
-            async function loadExportHistory() {
-                const container = document.getElementById('exportHistoryContainer');
-                if (!container) return;
-
-                try {
-                    // Lấy ngày mới nhất có dữ liệu xuất hàng
-                    const { data: latestData, error: latestError } = await supabase
-                        .from('exports')
-                        .select('date')
-                        .order('date', { ascending: false })
-                        .limit(1);
-
-                    if (latestError) throw latestError;
-
-                    if (!latestData || latestData.length === 0) {
-                        container.innerHTML = '<div class="no-data">Chưa có dữ liệu xuất hàng nào</div>';
-                        return;
-                    }
-
-                    const latestDate = latestData[0].date;
-
-                    // Lấy tất cả đơn xuất hàng của ngày đó
-                    const { data: exports, error } = await supabase
-                        .from('exports')
-                        .select('*')
-                        .eq('date', latestDate)
-                        .order('created_at', { ascending: false });
-
-                    if (error) throw error;
-
-                    if (!exports || exports.length === 0) {
-                        container.innerHTML = '<div class="no-data">Không có dữ liệu xuất hàng</div>';
-                        return;
-                    }
-
-                    // Nhóm theo quán
-                    const groupedByStore = {};
-                    exports.forEach(exp => {
-                        if (!groupedByStore[exp.store]) {
-                            groupedByStore[exp.store] = [];
-                        }
-                        groupedByStore[exp.store].push(exp);
-                    });
-
-                    // Tạo HTML
-                    let html = `
-                        <p style="margin-bottom:15px; color:#666;">
-                            <strong>📅 Ngày:</strong> ${new Date(latestDate).toLocaleDateString('vi-VN')}
-                        </p>
-                        <table class="export-history-table">
-                            <thead>
-                                <tr>
-                                    <th width="80">Quán</th>
-                                    <th>Mặt hàng</th>
-                                    <th width="100">Số lượng</th>
-                                    <th width="150">Người xuất</th>
-                                    <th width="100">Thời gian</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-
-                    for (const [store, items] of Object.entries(groupedByStore)) {
-                        items.forEach((exp, idx) => {
-                            const time = exp.created_at 
-                                ? new Date(exp.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-                                : '--:--';
-                            
-                            html += `
-                                <tr>
-                                    ${idx === 0 ? `<td rowspan="${items.length}"><span class="store-badge ${store}">${store}</span></td>` : ''}
-                                    <td>${exp.item}</td>
-                                    <td style="text-align:center; font-weight:600;">${exp.quantity}</td>
-                                    <td>${exp.user_name || 'N/A'}</td>
-                                    <td style="text-align:center;">${time}</td>
-                                </tr>
-                            `;
-                        });
-                    }
-
-                    html += `
-                            </tbody>
-                        </table>
-                    `;
-
-                    container.innerHTML = html;
-
-                } catch (err) {
-                    console.error('❌ Lỗi load lịch sử xuất hàng:', err);
-                    container.innerHTML = '<div class="no-data" style="color:red;">Lỗi tải dữ liệu</div>';
-                }
-            }
-
-
+// Khôi phục session nếu có
+window.addEventListener('DOMContentLoaded', () => {
+    const savedDate = localStorage.getItem('currentDate');
+    const savedUser = localStorage.getItem('currentUser');
+    const savedToken = localStorage.getItem('authToken');
+    
+    if (savedDate && savedUser && savedToken) {
+        currentDate = savedDate;
+        currentUser = savedUser;
+        authToken = savedToken;
+        
+        document.getElementById('loginScreen').classList.remove('active');
+        document.getElementById('mainScreen').classList.add('active');
+        document.getElementById('currentDate').textContent = currentDate;
+        document.getElementById('currentUser').textContent = currentUser;
+        
+        loadInventory();
+    } else {
+        document.getElementById('loginScreen').classList.add('active');
+    }
+});
     </script>
 </body>
 </html>
