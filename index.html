@@ -721,8 +721,20 @@
             options.body = JSON.stringify(body);
         }
         
+         // 🐛 DEBUG
+        console.log('📤 API Request:', {
+            url: `${API_BASE_URL}${endpoint}`,
+            method,
+            headers: options.headers,
+            body: body
+        });
         const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
         
+         // 🐛 DEBUG
+        console.log('📥 API Response:', {
+            status: response.status,
+            ok: response.ok
+        });
         if (!response.ok) {
             throw new Error(`API Error: ${response.statusText}`);
         }
@@ -851,19 +863,25 @@
     }
 
     function getItemsFromContainer(containerId) {
-        const container = document.getElementById(containerId);
-        const rows = container.querySelectorAll('.item-row');
-        const items = [];
+    const container = document.getElementById(containerId);
+    const rows = container.querySelectorAll('.item-row');
+    const items = [];
 
-        rows.forEach(row => {
-            const name = row.querySelector('.item-select').value;
-            const quantity = parseFloat(row.querySelector('.item-quantity').value);
-            if (name && quantity > 0) items.push({ name, quantity });
-        });
+    rows.forEach(row => {
+        const itemName = row.querySelector('.item-select').value;
+        const quantity = parseFloat(row.querySelector('.item-quantity').value);
+        
+        // ✅ Đổi "name" → "item" để khớp backend
+        if (itemName && quantity > 0) {
+            items.push({ 
+                item: itemName,      // Thay đổi từ "name"
+                quantity: quantity 
+            });
+        }
+    });
 
-        return items;
-    }
-
+    return items;
+}
     // Init screens
     function initRawInput() {
         document.getElementById('rawItemsContainer').innerHTML = '';
